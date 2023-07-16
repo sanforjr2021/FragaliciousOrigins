@@ -1,0 +1,10 @@
+name: FragaliciousOrigins
+description: Sir Fraagalicious's take on the Origins Mod.
+author: Sir_Fragalicious
+website: github.com
+version: '${project.version}'
+main: com.github.sanforjr2021.FragaliciousOrigins
+api-version: 1.13
+commands:
+  origin:
+    aliases: [fragorigin, fragorigins, origins, fragaliciousorigins, fragaliciousorigin]
