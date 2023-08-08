@@ -18,7 +18,7 @@ public class DAOController {
             Statement statement = openDBConnection().createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS PlayerOrigin(" +
                     "UUID varchar(64)," +
-                    "Orign varchar(32)," +
+                    "Origin varchar(32)," +
                     "PRIMARY KEY (UUID)" +
                     ")";
             statement.execute(sql);

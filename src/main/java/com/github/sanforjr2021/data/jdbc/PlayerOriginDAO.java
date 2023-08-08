@@ -19,7 +19,6 @@ public class PlayerOriginDAO {
         Connection connection = DAOController.openDBConnection();
         PreparedStatement statement = connection.prepareStatement("SELECT Origin FROM PlayerOrigin WHERE UUID = ?");
         statement.setString(1, uuid.toString());
-        System.out.println(statement);
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.next()) {
             type = OriginType.valueOf(resultSet.getString(1));
@@ -34,13 +33,15 @@ public class PlayerOriginDAO {
         int numRowsChanged = 0;
         try {
             Connection connection = DAOController.openDBConnection();
-            PreparedStatement statement = connection.prepareStatement("INSERT OR UPDATE PlayerOrigin (UUID, Origin) VALUES ( ?,?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO PlayerOrigin VALUES ( ?,?) ON DUPLICATE KEY UPDATE Origin = ?;");
             statement.setString(1, uuid.toString());
             statement.setString(2, type.toString());
+            statement.setString(3, type.toString());
             numRowsChanged = statement.executeUpdate();
             connection.close();
         } catch (SQLException throwables) {
             logError("Error Logging player into database " + uuid);
+            throwables.printStackTrace();
         }
         return numRowsChanged == 1;
     }
@@ -53,12 +54,13 @@ public class PlayerOriginDAO {
         try {
             Connection connection = DAOController.openDBConnection();
             try {
-                PreparedStatement statement;
                 connection.setAutoCommit(false); //Commits are delayed so if there are any issues we don't run into issues and can safely rollback DB
                 for (Map.Entry<UUID, Origin> mapElement : map.entrySet()) {
-                    statement = connection.prepareStatement("INSERT OR UPDATE PlayerOrigin (UUID, Origin) VALUES ( ?,?)");
+                    PreparedStatement statement = connection.prepareStatement("INSERT INTO PlayerOrigin VALUES ( ?,?) ON DUPLICATE KEY UPDATE Origin = ?;");
+                    String origin =  mapElement.getValue().getOriginType().toString();
                     statement.setString(1, mapElement.getKey().toString());
-                    statement.setString(2, mapElement.getValue().toString());
+                    statement.setString(2, origin);
+                    statement.setString(3, origin);
                     statement.execute();
                 }
                 connection.commit();
@@ -66,6 +68,7 @@ public class PlayerOriginDAO {
                 connection.close();
             } catch (SQLException throwables) {
                 logError("Could not save hashmap of all players");
+                throwables.printStackTrace();
                 connection.rollback();
                 return false;
             }
