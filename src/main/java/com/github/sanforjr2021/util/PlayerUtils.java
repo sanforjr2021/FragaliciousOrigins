@@ -73,12 +73,12 @@ public class PlayerUtils {
     }
 
     public static void addEffect(Player player, PotionEffectType effectType, int amplifier, int duration){
-        player.addPotionEffect(new PotionEffect(effectType, amplifier, duration, false, false, false));
+        player.addPotionEffect(new PotionEffect(effectType,duration , amplifier, false, false, false));
 
     }
 
     public static void addEffect(Player player, PotionEffectType effectType,int amplifier){
-        player.addPotionEffect(new PotionEffect(effectType, Integer.MAX_VALUE, amplifier, true, true, true));
+        player.addPotionEffect(new PotionEffect(effectType, Integer.MAX_VALUE, amplifier, false, false, false));
 
     }
     public static void removeEffect(Player player, PotionEffectType effectType){

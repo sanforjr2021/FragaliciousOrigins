@@ -98,4 +98,5 @@ public class ShadowSkinAbility extends Ability {
     private boolean generateChance(){
         return random.nextInt(FIRE_RESIST_DAMAGE_CHANCE) == 0;
     }
+
 }

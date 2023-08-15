@@ -73,7 +73,7 @@ public class GhostAbility extends Ability {
                 }.runTaskTimer(getInstance(), 5l, 5l);
             }else{
                 //if on cooldown still
-                MessageUtil.sendMessage("&eGhost Mode is on cooldown for &c" + (phantom.getGhostCooldownRemaining()/20) + " &eseconds.", player);
+                sendCooldownMessage("Ghost Mode", phantom.getGhostCooldownRemaining()/20, player);
             }
         }
     }
