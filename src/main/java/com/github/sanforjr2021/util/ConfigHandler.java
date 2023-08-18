@@ -12,12 +12,15 @@ public class ConfigHandler {
     //Feline
     private static int felinePounceCooldown;
     private static double felineJumpMultiplier, felineSpeed;
+    //Enderian
+    private static int enderianMaxHealth, enderianTeleportCooldown, enderianTeleportDistance, enderianDamageTeleportRange, enderianDamageTeleportAttempts;
 
     public ConfigHandler(FragaliciousOrigins instance) {
         config = instance.getConfig();
         buildConfig(instance);
         loadConfig();
     }
+
 
     private void buildConfig(FragaliciousOrigins instance) {
         config.addDefault("#######################General Settings#####################", "");
@@ -35,8 +38,15 @@ public class ConfigHandler {
         config.addDefault("Feline Jump Multiplier", 3.1);
         config.addDefault("Feline Speed", 0.4);
         config.addDefault("Feline Pounce Cooldown", 30);
+        config.addDefault("#######################Enderian Settings#####################", "");
+        config.addDefault("Enderian Max Health", 24);
+        config.addDefault("Enderian Teleport Cooldown", 10);
+        config.addDefault("Enderian Teleport Distance", 15);
+        config.addDefault("Enderian Damage Teleport Attempts", 30);
+        config.addDefault("Enderian Danage Teleport Range", 15);
         config.options().copyDefaults(true);
         instance.saveConfig();
+
     }
 
     public void loadConfig() {
@@ -52,6 +62,11 @@ public class ConfigHandler {
         felineJumpMultiplier = config.getDouble("Phantom Light Exposure Time");
         felineSpeed = config.getDouble("Feline Speed");
         felinePounceCooldown = config.getInt("Feline Pounce Cooldown");
+        enderianMaxHealth = config.getInt("Enderian Max Health");
+        enderianTeleportCooldown = config.getInt("Enderian Teleport Cooldown");
+        enderianTeleportDistance = config.getInt("Enderian Teleport Distance");
+        enderianDamageTeleportAttempts = config.getInt("Enderian Damage Teleport Attempts");
+        enderianDamageTeleportRange = config.getInt("Enderian Danage Teleport Range");
     }
 
     public static String getJdbcURL() {
@@ -100,5 +115,25 @@ public class ConfigHandler {
 
     public static double getFelineSpeed() {
         return felineSpeed;
+    }
+
+    public static int getEnderianMaxHealth() {
+        return enderianMaxHealth;
+    }
+
+    public static int getEnderianTeleportDistance() {
+        return enderianTeleportDistance;
+    }
+
+    public static int getEnderianTeleportCooldown() {
+        return enderianTeleportCooldown;
+    }
+
+    public static int getEnderianDamageTeleportRange() {
+        return enderianDamageTeleportRange;
+    }
+
+    public static int getEnderianDamageTeleportAttempts() {
+        return enderianDamageTeleportAttempts;
     }
 }

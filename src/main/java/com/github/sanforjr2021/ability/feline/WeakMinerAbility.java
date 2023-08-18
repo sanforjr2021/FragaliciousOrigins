@@ -2,15 +2,14 @@ package com.github.sanforjr2021.ability.feline;
 
 import com.github.sanforjr2021.ability.Ability;
 import com.github.sanforjr2021.util.MessageUtil;
-import com.github.sanforjr2021.util.PlayerUtils;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.potion.PotionEffectType;
 
-public class WeakMiner extends Ability {
-    public WeakMiner(BlockBreakEvent e) {
+public class WeakMinerAbility extends Ability {
+    public WeakMinerAbility(BlockBreakEvent e) {
         Player player = e.getPlayer();
         Block block = e.getBlock();
         if (isStone(block) && !player.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {

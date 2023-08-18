@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import static com.github.sanforjr2021.util.ConfigHandler.getFelineSpeed;
 
 public class Feline extends Origin{
-    public static float WALK_SPEED = 0.4f;
+    public static float WALK_SPEED;
     private int pounceCooldown;
     private boolean wet;
     public Feline(Player player) {
@@ -33,14 +33,6 @@ public class Feline extends Origin{
 
     public static void reload() {
         WALK_SPEED = (float) getFelineSpeed();
-    }
-
-    public static float getWalkSpeed() {
-        return WALK_SPEED;
-    }
-
-    public static void setWalkSpeed(float walkSpeed) {
-        WALK_SPEED = walkSpeed;
     }
 
     public int getPounceCooldown() {

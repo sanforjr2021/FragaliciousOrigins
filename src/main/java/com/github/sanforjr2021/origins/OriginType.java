@@ -24,6 +24,8 @@ public enum OriginType {
                 return new Phantom(player);
             case FELINE:
                 return new Feline(player);
+            case ENDERIAN:
+                return new Enderian(player);
             default:
                 return new Human(player);
         }

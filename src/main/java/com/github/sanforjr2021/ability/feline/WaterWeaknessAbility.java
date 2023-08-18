@@ -14,7 +14,7 @@ public class WaterWeaknessAbility extends Ability {
         Player player = e.getPlayer();
         Feline feline = (Feline) PlayerManager.getOrigin(player.getUniqueId());
         if(player.isInWater() && !feline.isWet()){
-            PlayerUtils.addEffect(player, PotionEffectType.WEAKNESS, 2);
+            PlayerUtils.addEffect(player, PotionEffectType.WEAKNESS, 1);
             PlayerUtils.addEffect(player, PotionEffectType.SLOW, 2);
             feline.setWet(true);
         }

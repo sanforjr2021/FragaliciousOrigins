@@ -2,9 +2,7 @@ package com.github.sanforjr2021.data;
 
 import com.github.sanforjr2021.FragaliciousOrigins;
 import com.github.sanforjr2021.data.jdbc.PlayerOriginDAO;
-import com.github.sanforjr2021.origins.Human;
-import com.github.sanforjr2021.origins.Origin;
-import com.github.sanforjr2021.origins.Phantom;
+import com.github.sanforjr2021.origins.*;
 import com.github.sanforjr2021.util.MessageUtil;
 import com.github.sanforjr2021.util.PlayerUtils;
 import com.github.sanforjr2021.util.bossBar.BossBarType;
@@ -33,7 +31,9 @@ public class PlayerManager {
     public static void setOrigin(UUID uuid, Origin origin, boolean joiningServer){
         playerMap.put(uuid,origin);
         if(!joiningServer){ //Is changing origin, and not relogging
+            OriginBossBarManager.removeBossBars(uuid);
             PlayerOriginDAO.write(uuid, origin.getOriginType());
+
         }
     }
     public static void remove(UUID uuid){
@@ -93,6 +93,8 @@ public class PlayerManager {
     public static void reload(){
         Human.reload();
         Phantom.reload();
+        Feline.reload();
+        Enderian.reload();
         //Update players
         for (Map.Entry<UUID, Origin> mapElement : playerMap.entrySet()) {
             mapElement.getValue().onDeath();
