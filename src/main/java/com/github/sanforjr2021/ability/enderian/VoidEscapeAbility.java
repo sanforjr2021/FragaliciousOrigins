@@ -28,6 +28,7 @@ public class VoidEscapeAbility extends Ability {
         }
     }
     private void teleportToSpawnpoint(Player player){
+        player.setFallDistance(0f);
         Location spawnLocation = player.getBedSpawnLocation();
         if(spawnLocation == null){
             spawnLocation = player.getWorld().getSpawnLocation();
