@@ -1,13 +1,16 @@
-package com.github.sanforjr2021.data;
+package com.github.sanforjr2021.origins;
 
+import com.github.sanforjr2021.FragaliciousOrigins;
 import com.github.sanforjr2021.data.jdbc.PlayerOriginDAO;
-import com.github.sanforjr2021.origins.*;
 import com.github.sanforjr2021.util.MessageUtil;
 import com.github.sanforjr2021.util.bossBar.OriginBossBarManager;
 import com.github.sanforjr2021.util.time.TimeCycle;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -98,10 +101,18 @@ public class PlayerManager {
         Feline.reload();
         Enderian.reload();
         Shulk.reload();
-        //Update players
-        for (Map.Entry<UUID, Origin> mapElement : playerMap.entrySet()) {
-            mapElement.getValue().onDeath();
+        Chicken.reload();
+        //Update all players origins
+        Collection<Player> players = (Collection<Player>) FragaliciousOrigins.getInstance().getServer().getOnlinePlayers();
+        for(Player player : players){
+            try {
+                OriginType originType = PlayerOriginDAO.getOrigin(player.getUniqueId());
+                PlayerManager.setOrigin(player.getUniqueId(), originType.getOrigin(player), true);
+            } catch (SQLException ex) {
+                MessageUtil.sendMessage("&eWelcome back! You may select an origin by typing &c/origin choose <Origintype>", player);
+            }
         }
+
     }
 
 }

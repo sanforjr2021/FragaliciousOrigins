@@ -1,6 +1,10 @@
 package com.github.sanforjr2021.ability;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+import com.github.sanforjr2021.ability.Chicken.CliffSleepAbility;
+import com.github.sanforjr2021.ability.Chicken.ReducedHungerAbility;
+import com.github.sanforjr2021.ability.Chicken.SlowfallAbility;
+import com.github.sanforjr2021.ability.Chicken.SpawnBirdAbility;
 import com.github.sanforjr2021.ability.enderian.*;
 import com.github.sanforjr2021.ability.feline.*;
 import com.github.sanforjr2021.ability.phantom.GhostAbility;
@@ -8,11 +12,12 @@ import com.github.sanforjr2021.ability.phantom.ShadowSkinAbility;
 import com.github.sanforjr2021.ability.shared.CarnivoreAbility;
 import com.github.sanforjr2021.ability.shared.NightVisionAbility;
 import com.github.sanforjr2021.ability.shared.NocturnalSleepAbility;
+import com.github.sanforjr2021.ability.shared.VegetarianAbility;
 import com.github.sanforjr2021.ability.shulker.LevitateEnemyAbility;
 import com.github.sanforjr2021.ability.shulker.LevitateOnDamageAbility;
-import com.github.sanforjr2021.ability.shulker.OpenShulkInventory;
+import com.github.sanforjr2021.ability.shulker.ShulkInventoryAbility;
 import com.github.sanforjr2021.ability.shulker.ToggleLevitationAbility;
-import com.github.sanforjr2021.data.PlayerManager;
+import com.github.sanforjr2021.origins.PlayerManager;
 import com.github.sanforjr2021.data.jdbc.PlayerOriginDAO;
 import com.github.sanforjr2021.origins.*;
 import com.github.sanforjr2021.util.MessageUtil;
@@ -24,6 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -75,12 +81,16 @@ public class AbilityListener implements Listener {
                 break;
             case ENDERIAN:
                 new VoidEscapeAbility(origin);
+                break;
+            case CHICKEN:
+                new SlowfallAbility(e);
+                break;
             default:
                 break;
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEnterBed(PlayerBedEnterEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
         switch (origin.getOriginType()) {
@@ -89,9 +99,21 @@ public class AbilityListener implements Listener {
             case FELINE:
                 new NocturnalSleepAbility(origin, e);
                 break;
+            case CHICKEN:
+                new CliffSleepAbility(e);
         }
     }
+    @EventHandler
+    public void onFoodLevelChange(FoodLevelChangeEvent e){
+        if(e.getEntity() instanceof Player){
+            Origin origin = PlayerManager.getOrigin(e.getEntity().getUniqueId());
+            switch (origin.getOriginType()) {
+                case CHICKEN:
+                    new ReducedHungerAbility(e);
+            }
+        }
 
+    }
     @EventHandler
     public void onLeaveBed(PlayerBedLeaveEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
@@ -212,6 +234,9 @@ public class AbilityListener implements Listener {
             case FELINE:
                 new CarnivoreAbility(e);
                 break;
+            case CHICKEN:
+                new VegetarianAbility(e);
+                break;
         }
     }
 
@@ -244,6 +269,8 @@ public class AbilityListener implements Listener {
         TeleportOnDamageAbility.reload();
         LevitateEnemyAbility.reload();
         LevitateOnDamageAbility.reload();
+        ReducedHungerAbility.reload();
+        SpawnBirdAbility.reload();
     }
 
     public static void primaryAbility(Origin origin) {
@@ -258,7 +285,9 @@ public class AbilityListener implements Listener {
                 new TeleportAbility((Enderian) origin);
                 break;
             case SHULK:
-                new OpenShulkInventory((Shulk) origin);
+                new ShulkInventoryAbility((Shulk) origin);
+            case CHICKEN:
+                new SpawnBirdAbility((Chicken) origin);
         }
     }
 

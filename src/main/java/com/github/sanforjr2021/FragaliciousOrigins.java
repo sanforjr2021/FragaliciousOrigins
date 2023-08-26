@@ -3,13 +3,13 @@ package com.github.sanforjr2021;
 import com.github.sanforjr2021.ability.AbilityListener;
 import com.github.sanforjr2021.commands.*;
 import com.github.sanforjr2021.menus.MenuListener;
+import com.github.sanforjr2021.util.bossBar.OriginBossBar;
 import com.github.sanforjr2021.util.bossBar.OriginBossBarManager;
 import com.github.sanforjr2021.data.jdbc.DAOController;
 import com.github.sanforjr2021.data.jdbc.PlayerOriginDAO;
-import com.github.sanforjr2021.data.PlayerManager;
+import com.github.sanforjr2021.origins.PlayerManager;
 import com.github.sanforjr2021.util.ConfigHandler;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import static com.github.sanforjr2021.util.MessageUtil.log;
 
@@ -41,6 +41,7 @@ public class FragaliciousOrigins extends JavaPlugin {
     public void onDisable() {
         log("is beginning shutdown process");
         PlayerOriginDAO.write(playerManager.getPlayerMap());
+        OriginBossBarManager.removeAllBossBars();
         log("is Shut Down");
         //save JDBC info
     }

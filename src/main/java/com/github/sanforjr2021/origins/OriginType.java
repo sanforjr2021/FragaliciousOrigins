@@ -1,12 +1,11 @@
 package com.github.sanforjr2021.origins;
 
-import com.github.sanforjr2021.data.PlayerManager;
 import org.bukkit.entity.Player;
 
 public enum OriginType {
     ARACHNID,
-    AVIAN,
     BLAZEBORNE,
+    CHICKEN,
     ELYTRIAN,
     ENDERIAN,
     FELINE,
@@ -28,6 +27,8 @@ public enum OriginType {
                 return new Enderian(player);
             case SHULK:
                 return new Shulk(player);
+            case CHICKEN:
+                return new Chicken(player);
             default:
                 return new Human(player);
         }

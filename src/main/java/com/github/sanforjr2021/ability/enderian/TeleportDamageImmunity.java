@@ -2,7 +2,7 @@ package com.github.sanforjr2021.ability.enderian;
 
 import com.github.sanforjr2021.FragaliciousOrigins;
 import com.github.sanforjr2021.ability.Ability;
-import com.github.sanforjr2021.data.PlayerManager;
+import com.github.sanforjr2021.origins.PlayerManager;
 import com.github.sanforjr2021.origins.Enderian;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;

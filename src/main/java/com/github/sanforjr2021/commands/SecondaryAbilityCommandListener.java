@@ -1,7 +1,7 @@
 package com.github.sanforjr2021.commands;
 
 import com.github.sanforjr2021.ability.AbilityListener;
-import com.github.sanforjr2021.data.PlayerManager;
+import com.github.sanforjr2021.origins.PlayerManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

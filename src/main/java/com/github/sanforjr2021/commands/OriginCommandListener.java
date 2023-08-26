@@ -1,6 +1,6 @@
 package com.github.sanforjr2021.commands;
 
-import com.github.sanforjr2021.data.PlayerManager;
+import com.github.sanforjr2021.origins.PlayerManager;
 import com.github.sanforjr2021.origins.OriginType;
 import com.github.sanforjr2021.util.MessageUtil;
 import org.bukkit.Bukkit;

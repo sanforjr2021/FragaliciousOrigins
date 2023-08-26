@@ -2,7 +2,7 @@ package com.github.sanforjr2021.ability.feline;
 
 import com.github.sanforjr2021.FragaliciousOrigins;
 import com.github.sanforjr2021.ability.Ability;
-import com.github.sanforjr2021.data.PlayerManager;
+import com.github.sanforjr2021.origins.PlayerManager;
 import com.github.sanforjr2021.origins.Feline;
 import com.github.sanforjr2021.util.ConfigHandler;
 import com.github.sanforjr2021.util.PlayerUtils;

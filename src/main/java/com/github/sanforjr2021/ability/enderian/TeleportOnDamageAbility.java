@@ -1,12 +1,9 @@
 package com.github.sanforjr2021.ability.enderian;
 
 import com.github.sanforjr2021.ability.Ability;
-import com.github.sanforjr2021.data.PlayerManager;
+import com.github.sanforjr2021.origins.PlayerManager;
 import com.github.sanforjr2021.origins.Enderian;
-import com.github.sanforjr2021.origins.Origin;
 import com.github.sanforjr2021.util.ConfigHandler;
-import com.github.sanforjr2021.util.MessageUtil;
-import com.github.sanforjr2021.util.PlayerUtils;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.World;

@@ -38,8 +38,18 @@ public class OriginBossBarManager {
 
     public static void removeBossBars(UUID uuid) {
         if (playerBossBars.containsKey(uuid)) {
+            ArrayList<OriginBossBar> bars = playerBossBars.get(uuid);
+            for (OriginBossBar bar : bars){
+                bar.removeBossBar();
+            }
            playerBossBars.remove(uuid);
         }
+    }
+
+    public static void removeAllBossBars() {
+        playerBossBars.forEach((key, value) -> {
+            removeBossBars(key);
+        });
     }
 
     public static OriginBossBar geOriginBossBar(UUID uuid, BossBarType type) {

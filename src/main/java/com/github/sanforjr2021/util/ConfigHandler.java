@@ -16,7 +16,8 @@ public class ConfigHandler {
     private static int enderianMaxHealth, enderianTeleportCooldown, enderianTeleportDistance, enderianDamageTeleportRange, enderianDamageTeleportAttempts;
     //Shulk
     private static double shulkToughness,shulkArmor,shulkKnockback,shulkSpeed,shulkFoodLossChance, shulkSelfLevitationChance, shulkTargetLevitationChance;
-
+    private static double chickenHungerCancel, chickenSpeed;
+    private static int chickenSpawnBirdCooldown;
     public ConfigHandler(FragaliciousOrigins instance) {
         config = instance.getConfig();
         buildConfig(instance);
@@ -56,6 +57,10 @@ public class ConfigHandler {
         config.addDefault("Shulk Food Loss Chance", 0.2);
         config.addDefault("Shulk Self Levitation Chance", 0.2);
         config.addDefault("Shulk Other Levitation Chance", 0.1);
+        config.addDefault("######################Chicken Settings#####################", "");
+        config.addDefault("Chicken Speed", 0.35);
+        config.addDefault("Chicken Hunger Cancel Chance", 0.2);
+        config.addDefault("Chicken Spawn Bird Cooldown",180);
         config.options().copyDefaults(true);
         instance.saveConfig();
     }
@@ -85,7 +90,9 @@ public class ConfigHandler {
         shulkFoodLossChance = config.getDouble("Shulk Food Loss Chance");
         shulkSelfLevitationChance = config.getDouble("Shulk Self Levitation Chance");
         shulkTargetLevitationChance = config.getDouble("Shulk Other Levitation Chance");
-
+        chickenSpeed = config.getDouble("Chicken Speed");
+        chickenHungerCancel = config.getDouble("Chicken Hunger Cancel Chance");
+        chickenSpawnBirdCooldown = config.getInt("Chicken Spawn Bird Cooldown");
     }
 
     public static String getJdbcURL() {
@@ -181,5 +188,17 @@ public class ConfigHandler {
 
     public static double getShulkTargetLevitationChance() {
         return shulkTargetLevitationChance;
+    }
+
+    public static double getChickenHungerCancel() {
+        return chickenHungerCancel;
+    }
+
+    public static double getChickenSpeed() {
+        return chickenSpeed;
+    }
+
+    public static int getChickenSpawnBirdCooldown() {
+        return chickenSpawnBirdCooldown;
     }
 }
