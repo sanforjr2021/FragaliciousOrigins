@@ -14,12 +14,16 @@ public class ConfigHandler {
     private static double felineJumpMultiplier, felineSpeed;
     //Enderian
     private static int enderianMaxHealth, enderianTeleportCooldown, enderianTeleportDistance, enderianDamageTeleportRange, enderianDamageTeleportAttempts;
+    //Shulk
+    private static double shulkToughness,shulkArmor,shulkKnockback,shulkSpeed,shulkFoodLossChance, shulkSelfLevitationChance, shulkTargetLevitationChance;
 
     public ConfigHandler(FragaliciousOrigins instance) {
         config = instance.getConfig();
         buildConfig(instance);
         loadConfig();
     }
+
+
 
 
     private void buildConfig(FragaliciousOrigins instance) {
@@ -44,9 +48,16 @@ public class ConfigHandler {
         config.addDefault("Enderian Teleport Distance", 15);
         config.addDefault("Enderian Damage Teleport Attempts", 30);
         config.addDefault("Enderian Danage Teleport Range", 15);
+        config.addDefault("#######################Shulk Settings#####################", "");
+        config.addDefault("Shulk Armor", 10.0);
+        config.addDefault("Shulk Toughness", 4.0);
+        config.addDefault("Shulk Knockback", 0.5);
+        config.addDefault("Shulk Speed", 0.18);
+        config.addDefault("Shulk Food Loss Chance", 0.2);
+        config.addDefault("Shulk Self Levitation Chance", 0.2);
+        config.addDefault("Shulk Other Levitation Chance", 0.1);
         config.options().copyDefaults(true);
         instance.saveConfig();
-
     }
 
     public void loadConfig() {
@@ -67,6 +78,14 @@ public class ConfigHandler {
         enderianTeleportDistance = config.getInt("Enderian Teleport Distance");
         enderianDamageTeleportAttempts = config.getInt("Enderian Damage Teleport Attempts");
         enderianDamageTeleportRange = config.getInt("Enderian Danage Teleport Range");
+        shulkArmor = config.getDouble("Shulk Armor");
+        shulkKnockback = config.getDouble("Shulk Knockback");
+        shulkToughness = config.getDouble("Shulk Toughness");
+        shulkSpeed = config.getDouble("Shulk Speed");
+        shulkFoodLossChance = config.getDouble("Shulk Food Loss Chance");
+        shulkSelfLevitationChance = config.getDouble("Shulk Self Levitation Chance");
+        shulkTargetLevitationChance = config.getDouble("Shulk Other Levitation Chance");
+
     }
 
     public static String getJdbcURL() {
@@ -135,5 +154,32 @@ public class ConfigHandler {
 
     public static int getEnderianDamageTeleportAttempts() {
         return enderianDamageTeleportAttempts;
+    }
+
+    public static double getShulkToughness() {
+        return shulkToughness;
+    }
+
+    public static double getShulkArmor() {
+        return shulkArmor;
+    }
+
+    public static double getShulkKnockback() {
+        return shulkKnockback;
+    }
+    public static double getShulkSpeed() {
+        return shulkSpeed;
+    }
+
+    public static double getShulkFoodLossChance() {
+        return shulkFoodLossChance;
+    }
+
+    public static double getShulkSelfLevitationChance() {
+        return shulkSelfLevitationChance;
+    }
+
+    public static double getShulkTargetLevitationChance() {
+        return shulkTargetLevitationChance;
     }
 }

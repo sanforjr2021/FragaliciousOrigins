@@ -12,3 +12,13 @@ commands:
   leavebed:
     description: Leave your bed as a nocturnal origin
     usage: /leavebed
+  primaryability:
+    description: Use your primary ability
+    usage: /primaryAbility
+  secondaryability:
+    description: Use your secondary ability
+    usage: /secondaryAbility
+  shulkchest:
+    description: View another players shulk inventory
+    usage: /shulkchest <player>
+    permission: fragalicious.origins.shulkchest

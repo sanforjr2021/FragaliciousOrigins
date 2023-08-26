@@ -2,8 +2,10 @@ package com.github.sanforjr2021.origins;
 
 import com.github.sanforjr2021.util.MessageUtil;
 import com.github.sanforjr2021.util.PlayerUtils;
+import com.github.sanforjr2021.util.bossBar.OriginBossBarManager;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -31,6 +33,9 @@ public abstract class Origin {
         PlayerUtils.resetFlySpeed(player);
         PlayerUtils.resetWalkSpeed(player);
         PlayerUtils.resetMaxHealth(player);
+        PlayerUtils.resetToughness(player);
+        PlayerUtils.resetKnockbackResistance(player);
+        OriginBossBarManager.removeBossBars(player.getUniqueId());
         MessageUtil.sendMessage("&eYou are no longer the origin &b" + originType, player);
     }
     public OriginType getOriginType() {

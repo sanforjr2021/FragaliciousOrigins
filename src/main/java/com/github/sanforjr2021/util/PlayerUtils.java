@@ -4,10 +4,10 @@ import com.github.sanforjr2021.FragaliciousOrigins;
 import org.bukkit.Statistic;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.w3c.dom.Attr;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -42,11 +42,36 @@ public class PlayerUtils {
         player.updateInventory();
     }
 
+    public static void setToughness(Player player, double toughness) {
+        AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS);
+        attributeInstance.setBaseValue(attributeInstance.getDefaultValue() + toughness);
+        player.updateInventory();
+    }
+
+    public static void resetToughness(Player player) {
+        AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS);
+        attributeInstance.setBaseValue(attributeInstance.getDefaultValue());
+        player.updateInventory();
+    }
+
+    public static void setKnockbackResistance(Player player, double knockbackResistance) {
+        AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
+        attributeInstance.setBaseValue(attributeInstance.getDefaultValue() + knockbackResistance);
+        player.updateInventory();
+    }
+
+    public static void resetKnockbackResistance(Player player) {
+        AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
+        attributeInstance.setBaseValue(attributeInstance.getDefaultValue());
+        player.updateInventory();
+    }
+
     public static void resetArmor(Player player) {
         AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_ARMOR);
         attributeInstance.setBaseValue(attributeInstance.getDefaultValue());
         player.updateInventory();
     }
+
 
     public static void setWalkSpeed(Player player, float walkSpeed) {
         player.setWalkSpeed(walkSpeed);
@@ -74,13 +99,16 @@ public class PlayerUtils {
 
     public static void addEffect(Player player, PotionEffectType effectType, int amplifier, int duration){
         player.addPotionEffect(new PotionEffect(effectType,duration , amplifier, false, false, false));
-
     }
 
     public static void addEffect(Player player, PotionEffectType effectType,int amplifier){
         player.addPotionEffect(new PotionEffect(effectType, Integer.MAX_VALUE, amplifier, false, false, false));
-
     }
+
+    public static void addEffect(LivingEntity entity, PotionEffectType effectType, int amplifier, int duration){
+        entity.addPotionEffect(new PotionEffect(effectType,duration , amplifier, false, false, false));
+    }
+
     public static void removeEffect(Player player, PotionEffectType effectType){
         player.removePotionEffect(effectType);
     }

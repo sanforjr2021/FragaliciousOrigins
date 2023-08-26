@@ -8,12 +8,13 @@ import com.github.sanforjr2021.ability.phantom.ShadowSkinAbility;
 import com.github.sanforjr2021.ability.shared.CarnivoreAbility;
 import com.github.sanforjr2021.ability.shared.NightVisionAbility;
 import com.github.sanforjr2021.ability.shared.NocturnalSleepAbility;
-import com.github.sanforjr2021.data.jdbc.PlayerOriginDAO;
-import com.github.sanforjr2021.origins.Enderian;
-import com.github.sanforjr2021.origins.Origin;
-import com.github.sanforjr2021.origins.OriginType;
-import com.github.sanforjr2021.origins.Phantom;
+import com.github.sanforjr2021.ability.shulker.LevitateEnemyAbility;
+import com.github.sanforjr2021.ability.shulker.LevitateOnDamageAbility;
+import com.github.sanforjr2021.ability.shulker.OpenShulkInventory;
+import com.github.sanforjr2021.ability.shulker.ToggleLevitationAbility;
 import com.github.sanforjr2021.data.PlayerManager;
+import com.github.sanforjr2021.data.jdbc.PlayerOriginDAO;
+import com.github.sanforjr2021.origins.*;
 import com.github.sanforjr2021.util.MessageUtil;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -21,6 +22,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
@@ -33,7 +35,7 @@ import java.util.UUID;
 import static com.github.sanforjr2021.FragaliciousOrigins.getInstance;
 
 public class AbilityListener implements Listener {
-    public AbilityListener(){
+    public AbilityListener() {
         reload();
         playerChecker();
     }
@@ -41,7 +43,8 @@ public class AbilityListener implements Listener {
     private void playerChecker() {
 
         new BukkitRunnable() {
-            int counter = 0;
+            final int counter = 0;
+
             @Override
             public void run() {
                 for (Map.Entry<UUID, Origin> playerOrigin : PlayerManager.getPlayerMap().entrySet()) {
@@ -50,28 +53,21 @@ public class AbilityListener implements Listener {
                         case PHANTOM:
                             new ShadowSkinAbility((Phantom) playerOrigin.getValue());
                             break;
+                        case ENDERIAN:
+                            new HydrophobicAbility((Enderian) playerOrigin.getValue());
+                            break;
                         default:
                             break;
                     }
-                    //every seconds
-                    if(counter == 1){
-                        switch (playerOrigin.getValue().getOriginType()){
-                            case ENDERIAN:
-                                new HydrophobicAbility((Enderian)playerOrigin.getValue());
-                        }
-                    }
-                }
-                counter++;
-                if(counter > 3){
-                    counter = 0;
                 }
             }
         }.runTaskTimer(getInstance(), 20, 5);
     }
+
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent e){
+    public void onPlayerMove(PlayerMoveEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-        switch (origin.getOriginType()){
+        switch (origin.getOriginType()) {
             case FELINE:
                 new WaterWeaknessAbility(e);
             case ARACHNID:
@@ -85,9 +81,9 @@ public class AbilityListener implements Listener {
     }
 
     @EventHandler
-    public void onEnterBed(PlayerBedEnterEvent e){
+    public void onEnterBed(PlayerBedEnterEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-        switch (origin.getOriginType()){
+        switch (origin.getOriginType()) {
             case PHANTOM:
             case ARACHNID:
             case FELINE:
@@ -95,10 +91,11 @@ public class AbilityListener implements Listener {
                 break;
         }
     }
+
     @EventHandler
-    public void onLeaveBed(PlayerBedLeaveEvent e){
+    public void onLeaveBed(PlayerBedLeaveEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-        switch (origin.getOriginType()){
+        switch (origin.getOriginType()) {
             case PHANTOM:
             case ARACHNID:
             case FELINE:
@@ -108,15 +105,15 @@ public class AbilityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onDeath(PlayerDeathEvent e){
+    public void onDeath(PlayerDeathEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-        switch (origin.getOriginType()){
+        switch (origin.getOriginType()) {
             case FELINE:
                 new NineLivesAbility(e);
                 break;
             case ENDERIAN:
                 Enderian enderian = (Enderian) PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-                if(enderian.isTeleportInvulnerability()){
+                if (enderian.isTeleportInvulnerability()) {
                     e.setCancelled(true);
                 }
                 break;
@@ -124,44 +121,24 @@ public class AbilityListener implements Listener {
                 break;
         }
     }
+
     @EventHandler
     public void onHotKey(PlayerSwapHandItemsEvent e) {
         Player player = e.getPlayer();
         Origin origin = PlayerManager.getOrigin(player.getUniqueId());
-        if(player.isSneaking()){ //is sneaking
-            switch(getOriginType(player)){
-                case ENDERIAN:
-                    new ToggleTeleportOnDamageAbility((Enderian) origin);
-                    break;
-                default:
-                break;
-            }
-        }else{
-            switch(getOriginType(player)) { //not sneaking
-                case PHANTOM:
-                    new GhostAbility((Phantom) origin);
-                    break;
-                case FELINE:
-                    new PounceAbility(player);
-                    break;
-                case ENDERIAN:
-                    new TeleportAbility((Enderian) origin);
-                    break;
-                case HUMAN:
-                    MessageUtil.sendMessage("Your not so sneaky" , player);
-                    //do nothing
-                    break;
-            }
+        if (player.isSneaking()) { //is sneaking
+            secondaryAbility(origin);
+        } else {
+            primaryAbility(origin);
         }
         e.setCancelled(true);
     }
 
 
-
     @EventHandler
-    public void onLogin(PlayerJoinEvent e){
+    public void onLogin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        if(player.hasPlayedBefore()) {
+        if (player.hasPlayedBefore()) {
             try {
                 OriginType originType = PlayerOriginDAO.getOrigin(player.getUniqueId());
                 PlayerManager.setOrigin(player.getUniqueId(), originType.getOrigin(player), true);
@@ -171,17 +148,19 @@ public class AbilityListener implements Listener {
         }
         MessageUtil.sendMessage("&eYou may select an origin by typing &c/origin choose <Origintype>", player);
     }
+
     @EventHandler
-    public void onQuit(PlayerQuitEvent e){
+    public void onQuit(PlayerQuitEvent e) {
         PlayerManager.remove(e.getPlayer().getUniqueId());
     }
+
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onTeleport(PlayerTeleportEvent e){
+    public void onTeleport(PlayerTeleportEvent e) {
         //cancel phantom spectator events
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-        switch(origin.getOriginType()){
+        switch (origin.getOriginType()) {
             case PHANTOM:
-                if(e.getPlayer().getGameMode() == GameMode.SPECTATOR) {
+                if (e.getPlayer().getGameMode() == GameMode.SPECTATOR) {
                     e.setCancelled(true);
                 }
                 break;
@@ -189,57 +168,69 @@ public class AbilityListener implements Listener {
                 new TeleportDamageImmunity(e);
         }
     }
+
     @EventHandler
-    public void onDamage(EntityDamageEvent e){
-        if (e.getEntity() instanceof  Player){
+    public void onDamage(EntityDamageEvent e) {
+        if (e.getEntity() instanceof Player) {
             Origin origin = PlayerManager.getOrigin(e.getEntity().getUniqueId());
-            switch(origin.getOriginType()){
+            switch (origin.getOriginType()) {
                 case FELINE:
                     new NoFallDamageAbility(e);
                     break;
                 case ENDERIAN:
                     new TeleportOnDamageAbility(e);
                     break;
+                case SHULK:
+                    new LevitateOnDamageAbility(e);
+                    break;
                 default:
                     break;
             }
             //This applies only to nocturnal origins
-            if(origin.isSleeping()){
+            if (origin.isSleeping()) {
                 origin.setSleeping(false);
             }
         }
     }
+
     @EventHandler
-    public void onEat(PlayerItemConsumeEvent e){
+    public void onAttackEntity(EntityDamageByEntityEvent e) {
+        if (e.getDamager() instanceof Player) {
+            Player player = (Player) e.getDamager();
+            Origin origin = PlayerManager.getOrigin(player.getUniqueId());
+            if (origin.getOriginType() == OriginType.SHULK) {
+                new LevitateEnemyAbility(e);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEat(PlayerItemConsumeEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-        switch (origin.getOriginType()){
+        switch (origin.getOriginType()) {
             case ARACHNID:
             case FELINE:
                 new CarnivoreAbility(e);
                 break;
         }
     }
+
     @EventHandler
     public void onPlayerJump(PlayerJumpEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-        switch (origin.getOriginType()){
-            case FELINE:
-                new LeapAbility(e);
-            default:
-                break;
+        if (origin.getOriginType() == OriginType.FELINE) {
+            new LeapAbility(e);
         }
     }
+
     @EventHandler
-    public void onPlayBreakBlock(BlockBreakEvent e){
+    public void onPlayBreakBlock(BlockBreakEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-        switch (origin.getOriginType()){
-            case FELINE:
-                    new WeakMinerAbility(e);
-                break;
-            default:
-                break;
+        if (origin.getOriginType() == OriginType.FELINE) {
+            new WeakMinerAbility(e);
         }
     }
+
     ///////////////////////////////////////////////////////////////
     //                    Utility Methods                       //
     //////////////////////////////////////////////////////////////
@@ -251,12 +242,34 @@ public class AbilityListener implements Listener {
         PounceAbility.reload();
         TeleportAbility.reload();
         TeleportOnDamageAbility.reload();
+        LevitateEnemyAbility.reload();
+        LevitateOnDamageAbility.reload();
     }
-    private OriginType getOriginType(Player player){
-        Origin origin = PlayerManager.getOrigin(player.getUniqueId());
-        if(origin == null){ //no origin set
-            return null;
+
+    public static void primaryAbility(Origin origin) {
+        switch (origin.getOriginType()) {
+            case PHANTOM:
+                new GhostAbility((Phantom) origin);
+                break;
+            case FELINE:
+                new PounceAbility(origin.getPlayer());
+                break;
+            case ENDERIAN:
+                new TeleportAbility((Enderian) origin);
+                break;
+            case SHULK:
+                new OpenShulkInventory((Shulk) origin);
         }
-        return PlayerManager.getOrigin(player.getUniqueId()).getOriginType();
+    }
+
+    public static void secondaryAbility(Origin origin) {
+        switch (origin.getOriginType()) {
+            case ENDERIAN:
+                new ToggleTeleportOnDamageAbility((Enderian) origin);
+                break;
+            case SHULK:
+                new ToggleLevitationAbility((Shulk) origin);
+                break;
+        }
     }
 }

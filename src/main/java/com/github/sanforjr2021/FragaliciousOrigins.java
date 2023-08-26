@@ -1,9 +1,9 @@
 package com.github.sanforjr2021;
 
 import com.github.sanforjr2021.ability.AbilityListener;
-import com.github.sanforjr2021.commands.LeaveBedCommandListener;
+import com.github.sanforjr2021.commands.*;
+import com.github.sanforjr2021.menus.MenuListener;
 import com.github.sanforjr2021.util.bossBar.OriginBossBarManager;
-import com.github.sanforjr2021.commands.CommandListener;
 import com.github.sanforjr2021.data.jdbc.DAOController;
 import com.github.sanforjr2021.data.jdbc.PlayerOriginDAO;
 import com.github.sanforjr2021.data.PlayerManager;
@@ -19,6 +19,7 @@ public class FragaliciousOrigins extends JavaPlugin {
     private static DAOController daoController;
     private static PlayerManager playerManager;
     private static ConfigHandler configHandler;
+    private static MenuListener menuListener;
     private static OriginBossBarManager originBossBarManager;
 
     @Override
@@ -29,9 +30,11 @@ public class FragaliciousOrigins extends JavaPlugin {
         daoController = new DAOController(configHandler.getJdbcURL());
         registerCommands();
         playerManager = new PlayerManager();
-        getServer().getPluginManager().registerEvents(new AbilityListener(), this);
+        abilityListener = new AbilityListener();
+        menuListener = new MenuListener();
+        getServer().getPluginManager().registerEvents(abilityListener, this);
+        getServer().getPluginManager().registerEvents(menuListener, this);
         originBossBarManager = new OriginBossBarManager();
-        syncDatabase();
         log("is loaded");
     }
 
@@ -40,16 +43,6 @@ public class FragaliciousOrigins extends JavaPlugin {
         PlayerOriginDAO.write(playerManager.getPlayerMap());
         log("is Shut Down");
         //save JDBC info
-    }
-
-    private void syncDatabase() {
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                PlayerOriginDAO.write(playerManager.getPlayerMap());
-            }
-        }.runTaskTimer(getInstance(), 18000l, 18000l);
     }
 
     public static FragaliciousOrigins getInstance() {
@@ -62,8 +55,11 @@ public class FragaliciousOrigins extends JavaPlugin {
         AbilityListener.reload();
     }
     private void registerCommands(){
-        this.getCommand("origin").setExecutor(new CommandListener());
+        this.getCommand("origin").setExecutor(new OriginCommandListener());
         this.getCommand("leavebed").setExecutor(new LeaveBedCommandListener());
+        this.getCommand("primaryability").setExecutor(new PrimaryAbilityCommandListener());
+        this.getCommand("secondaryability").setExecutor(new SecondaryAbilityCommandListener());
+        this.getCommand("shulkchest").setExecutor(new ShulkChestCommandListener());
     }
 
 }

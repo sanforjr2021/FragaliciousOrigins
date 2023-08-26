@@ -12,7 +12,7 @@ public class MessageUtil {
         FragaliciousOrigins.getInstance().getLogger().severe(error);
     }
     public static void log(String msg){
-        FragaliciousOrigins.getInstance().getLogger().severe(msg);
+        FragaliciousOrigins.getInstance().getLogger().fine(msg);
     }
     public static void logWarning(String warning){
         FragaliciousOrigins.getInstance().getLogger().warning(warning);
