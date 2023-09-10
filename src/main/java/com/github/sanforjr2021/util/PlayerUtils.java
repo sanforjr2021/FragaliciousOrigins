@@ -1,9 +1,14 @@
 package com.github.sanforjr2021.util;
 
 import com.github.sanforjr2021.FragaliciousOrigins;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Statistic;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -117,6 +122,16 @@ public class PlayerUtils {
         for ( PotionEffect effect : potionEffectCollection ){
             player.removePotionEffect(effect.getType());
         }
+    }
+    public static boolean isWet(Player player){
+        return (player.getWorld().hasStorm() && player.getWorld().getHighestBlockYAt(player.getLocation()) <= player.getLocation().getY()) || player.isInWater();
+    }
+    public static void generateParticle(LivingEntity entity, Particle particle, int count){
+        entity.getWorld().spawnParticle(particle, entity.getLocation(), count, 0.5, 0.5, 0.5, 0.0);
+    }
+    public static void generateParticle(LivingEntity entity, Material material, int count){
+        BlockData data = Bukkit.createBlockData(material);
+        entity.getWorld().spawnParticle(Particle.BLOCK_CRACK, entity.getLocation().add(0, 1, 0), count, 0.2, 0.2, 0.2, 0.0, data);
     }
     public static void resetSleep(Player player){
         player.setStatistic(Statistic.TIME_SINCE_REST, 0);

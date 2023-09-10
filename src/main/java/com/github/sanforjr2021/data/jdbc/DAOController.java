@@ -34,6 +34,12 @@ public class DAOController {
                     "PRIMARY KEY (UUID)" +
                     ")";
             statement.execute(sql);
+            sql = "CREATE TABLE IF NOT EXISTS BlazebornHeat(" +
+                    "UUID varchar(64)," +
+                    "Heat INT(10)," +
+                    "PRIMARY KEY (UUID)" +
+                    ")";
+            statement.execute(sql);
             statement.close();
         } catch (SQLException exp) {
             logError("Could not build table PlayerOrigin");

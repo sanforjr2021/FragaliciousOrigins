@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 public enum OriginType {
     ARACHNID,
-    BLAZEBORNE,
+    BLAZEBORN,
     CHICKEN,
     ELYTRIAN,
     ENDERIAN,
@@ -12,7 +12,8 @@ public enum OriginType {
     HUMAN,
     MERLING,
     PHANTOM,
-    SHULK;
+    SHULK,
+    UNASSIGNED;
 
     public Origin getOrigin(Player player){
         if(PlayerManager.contains(player.getUniqueId())){
@@ -29,8 +30,12 @@ public enum OriginType {
                 return new Shulk(player);
             case CHICKEN:
                 return new Chicken(player);
-            default:
+            case BLAZEBORN:
+                return new Blazeborn(player);
+            case HUMAN:
                 return new Human(player);
+            default:
+                return new Unassigned(player);
         }
     }
 }

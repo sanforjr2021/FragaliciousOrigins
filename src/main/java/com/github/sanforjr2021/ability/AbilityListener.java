@@ -5,14 +5,12 @@ import com.github.sanforjr2021.ability.Chicken.CliffSleepAbility;
 import com.github.sanforjr2021.ability.Chicken.ReducedHungerAbility;
 import com.github.sanforjr2021.ability.Chicken.SlowfallAbility;
 import com.github.sanforjr2021.ability.Chicken.SpawnBirdAbility;
+import com.github.sanforjr2021.ability.blazeborn.*;
 import com.github.sanforjr2021.ability.enderian.*;
 import com.github.sanforjr2021.ability.feline.*;
 import com.github.sanforjr2021.ability.phantom.GhostAbility;
 import com.github.sanforjr2021.ability.phantom.ShadowSkinAbility;
-import com.github.sanforjr2021.ability.shared.CarnivoreAbility;
-import com.github.sanforjr2021.ability.shared.NightVisionAbility;
-import com.github.sanforjr2021.ability.shared.NocturnalSleepAbility;
-import com.github.sanforjr2021.ability.shared.VegetarianAbility;
+import com.github.sanforjr2021.ability.shared.*;
 import com.github.sanforjr2021.ability.shulker.LevitateEnemyAbility;
 import com.github.sanforjr2021.ability.shulker.LevitateOnDamageAbility;
 import com.github.sanforjr2021.ability.shulker.ShulkInventoryAbility;
@@ -49,7 +47,7 @@ public class AbilityListener implements Listener {
     private void playerChecker() {
 
         new BukkitRunnable() {
-            final int counter = 0;
+            int counter = 1;
 
             @Override
             public void run() {
@@ -65,6 +63,18 @@ public class AbilityListener implements Listener {
                         default:
                             break;
                     }
+                    if(counter == 4){
+                        switch (playerOrigin.getValue().getOriginType()){
+                            case BLAZEBORN:
+                                new HeatAbility((Blazeborn) playerOrigin.getValue());
+                                break;
+                        }
+                    }
+                }
+                if(counter == 4){
+                    counter = 1;
+                }else{
+                    counter++;
                 }
             }
         }.runTaskTimer(getInstance(), 20, 5);
@@ -72,6 +82,7 @@ public class AbilityListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
+
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
         switch (origin.getOriginType()) {
             case FELINE:
@@ -85,7 +96,9 @@ public class AbilityListener implements Listener {
             case CHICKEN:
                 new SlowfallAbility(e);
                 break;
-            default:
+            case UNASSIGNED:
+                MessageUtil.sendMessage("You must select an origin first before you can continue", e.getPlayer());
+                e.setCancelled(true);
                 break;
         }
     }
@@ -110,6 +123,8 @@ public class AbilityListener implements Listener {
             switch (origin.getOriginType()) {
                 case CHICKEN:
                     new ReducedHungerAbility(e);
+                case BLAZEBORN:
+                    new HungerlessAbility(e);
             }
         }
 
@@ -133,13 +148,8 @@ public class AbilityListener implements Listener {
             case FELINE:
                 new NineLivesAbility(e);
                 break;
-            case ENDERIAN:
-                Enderian enderian = (Enderian) PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-                if (enderian.isTeleportInvulnerability()) {
-                    e.setCancelled(true);
-                }
-                break;
-            default:
+            case BLAZEBORN:
+                new ExtinguishAbility(e, (Blazeborn) origin);
                 break;
         }
     }
@@ -166,16 +176,24 @@ public class AbilityListener implements Listener {
                 PlayerManager.setOrigin(player.getUniqueId(), originType.getOrigin(player), true);
             } catch (SQLException ex) {
                 MessageUtil.sendMessage("&eWelcome back! You may select an origin by typing &c/origin choose <Origintype>", player);
+                PlayerManager.setOrigin(player.getUniqueId(), new Unassigned(player));
             }
+        }else{
+            MessageUtil.sendMessage("&eYou may select an origin by typing &c/origin choose <Origintype>", player);
+            PlayerManager.setOrigin(player.getUniqueId(), new Unassigned(player));
         }
-        MessageUtil.sendMessage("&eYou may select an origin by typing &c/origin choose <Origintype>", player);
+
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         PlayerManager.remove(e.getPlayer().getUniqueId());
     }
-
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent e){
+        Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
+            origin.onDeath();
+    }
     @EventHandler(priority = EventPriority.LOWEST)
     public void onTeleport(PlayerTeleportEvent e) {
         //cancel phantom spectator events
@@ -205,6 +223,8 @@ public class AbilityListener implements Listener {
                 case SHULK:
                     new LevitateOnDamageAbility(e);
                     break;
+                case BLAZEBORN:
+                    new HeatLossOnDamageAbility(e);
                 default:
                     break;
             }
@@ -220,8 +240,13 @@ public class AbilityListener implements Listener {
         if (e.getDamager() instanceof Player) {
             Player player = (Player) e.getDamager();
             Origin origin = PlayerManager.getOrigin(player.getUniqueId());
-            if (origin.getOriginType() == OriginType.SHULK) {
-                new LevitateEnemyAbility(e);
+            switch (origin.getOriginType()){
+                case SHULK:
+                    new LevitateEnemyAbility(e);
+                    break;
+                case BLAZEBORN:
+                    new FlameAttackAbility(e);
+                    break;
             }
         }
     }
@@ -236,6 +261,9 @@ public class AbilityListener implements Listener {
                 break;
             case CHICKEN:
                 new VegetarianAbility(e);
+                break;
+            case BLAZEBORN:
+                new CannotEatFoodAbility(e);
                 break;
         }
     }
@@ -271,6 +299,7 @@ public class AbilityListener implements Listener {
         LevitateOnDamageAbility.reload();
         ReducedHungerAbility.reload();
         SpawnBirdAbility.reload();
+        HeatAbility.reload();
     }
 
     public static void primaryAbility(Origin origin) {
@@ -286,8 +315,13 @@ public class AbilityListener implements Listener {
                 break;
             case SHULK:
                 new ShulkInventoryAbility((Shulk) origin);
+                break;
             case CHICKEN:
                 new SpawnBirdAbility((Chicken) origin);
+                break;
+            case BLAZEBORN:
+                new BurnItemAbility((Blazeborn) origin);
+                break;
         }
     }
 
@@ -298,6 +332,9 @@ public class AbilityListener implements Listener {
                 break;
             case SHULK:
                 new ToggleLevitationAbility((Shulk) origin);
+                break;
+            case BLAZEBORN:
+                new PurgeAbility((Blazeborn) origin);
                 break;
         }
     }

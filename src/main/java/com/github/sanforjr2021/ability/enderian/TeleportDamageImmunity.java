@@ -11,14 +11,14 @@ public class TeleportDamageImmunity extends Ability {
 
     public TeleportDamageImmunity(PlayerTeleportEvent e) {
         Enderian origin = (Enderian) PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-        if(!origin.isTeleportInvulnerability()){
+        if(!origin.isTeleportInvulnerability() && origin.getPlayer().getHealth() > 0){
             origin.setTeleportInvulnerability(true);
             new BukkitRunnable(){
                 @Override
                 public void run() {
                     origin.setTeleportInvulnerability(false);
                 }
-            }.runTaskTimer(FragaliciousOrigins.getInstance(), 15l,15);
+            }.runTaskTimer(FragaliciousOrigins.getInstance(), 10l,15);
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.github.sanforjr2021.data.enums;
+package com.github.sanforjr2021.ability.enums;
 
 import org.bukkit.Material;
 

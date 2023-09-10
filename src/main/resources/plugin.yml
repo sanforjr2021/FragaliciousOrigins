@@ -16,9 +16,13 @@ commands:
     description: Use your primary ability
     usage: /primaryAbility
   secondaryability:
-    description: Use your secondary ability
+    description: Use your secondary ability (if applicable)
     usage: /secondaryAbility
   shulkchest:
     description: View another players shulk inventory
     usage: /shulkchest <player>
-    permission: fragalicious.origins.shulkchest
+    permission: fragalicious.origins.command.shulkchest
+  heat:
+    description: Set the heat of a player.
+    usage: /heat <temperature> <player>
+    permission: fragalicious.origins.command.heat

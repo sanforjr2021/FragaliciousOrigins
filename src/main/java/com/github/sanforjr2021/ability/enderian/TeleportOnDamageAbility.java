@@ -20,7 +20,7 @@ public class TeleportOnDamageAbility extends Ability {
         Player player = (Player) e.getEntity();
         Enderian origin = (Enderian) PlayerManager.getOrigin(player.getUniqueId());
         //if invulnerable
-        if(origin.isTeleportInvulnerability()){
+        if(origin.isTeleportInvulnerability() ){
             e.setCancelled(true);
         //if not invernable check to see toggle
         } else if (!player.isDead() && e.getCause() != EntityDamageEvent.DamageCause.FALL

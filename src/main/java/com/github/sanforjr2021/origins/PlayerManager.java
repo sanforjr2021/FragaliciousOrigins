@@ -6,6 +6,7 @@ import com.github.sanforjr2021.util.MessageUtil;
 import com.github.sanforjr2021.util.bossBar.OriginBossBarManager;
 import com.github.sanforjr2021.util.time.TimeCycle;
 import org.bukkit.World;
+import org.bukkit.entity.Blaze;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -102,6 +103,7 @@ public class PlayerManager {
         Enderian.reload();
         Shulk.reload();
         Chicken.reload();
+        Blazeborn.reload();
         //Update all players origins
         Collection<Player> players = (Collection<Player>) FragaliciousOrigins.getInstance().getServer().getOnlinePlayers();
         for(Player player : players){

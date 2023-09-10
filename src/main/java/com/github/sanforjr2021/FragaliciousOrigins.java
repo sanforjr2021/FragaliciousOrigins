@@ -61,6 +61,7 @@ public class FragaliciousOrigins extends JavaPlugin {
         this.getCommand("primaryability").setExecutor(new PrimaryAbilityCommandListener());
         this.getCommand("secondaryability").setExecutor(new SecondaryAbilityCommandListener());
         this.getCommand("shulkchest").setExecutor(new ShulkChestCommandListener());
+        this.getCommand("heat").setExecutor(new HeatCommandListener());
     }
 
 }

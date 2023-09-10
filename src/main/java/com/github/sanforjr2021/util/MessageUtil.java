@@ -1,6 +1,7 @@
 package com.github.sanforjr2021.util;
 
 import com.github.sanforjr2021.FragaliciousOrigins;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
@@ -20,5 +21,9 @@ public class MessageUtil {
     public static void sendMessage(String msg, Player player){
         TextComponent textComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(getMsgPrefix() + msg);
         player.sendMessage(textComponent);
+    }
+    public static Component generateComponenet(String msg){
+        Component textComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(msg);
+        return textComponent;
     }
 }

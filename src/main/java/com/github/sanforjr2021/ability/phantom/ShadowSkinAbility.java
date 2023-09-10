@@ -57,7 +57,7 @@ public class ShadowSkinAbility extends Ability {
             //Remove when out of darkness
             }else if(player.hasPotionEffect(PotionEffectType.INVISIBILITY) && block.getLightLevel() > 0){
                 PlayerUtils.removeEffect(player, PotionEffectType.INVISIBILITY);
-                PlayerUtils.addEffect(player, PotionEffectType.NIGHT_VISION, 0);
+                PlayerUtils.removeEffect(player, PotionEffectType.NIGHT_VISION);
             }
         }
         //update boss bar
