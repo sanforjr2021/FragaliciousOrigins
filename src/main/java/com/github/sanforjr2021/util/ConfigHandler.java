@@ -79,7 +79,7 @@ public class ConfigHandler {
         config.addDefault("Purge Ability(boolean), Ability Cooldown in seconds (int), Ability Heat Restore (int),  Ability Duration in seconds (int), Damage Duration in seconds (int)", "");
         config.addDefault("Blazeborn Ability 1", "false,30,0,0,0");
         config.addDefault("Blazeborn Ability 2", "true,180,60,0,0");
-        config.addDefault("Blazeborn Ability 2", "true,120,100,1,1");
+        config.addDefault("Blazeborn Ability 3", "true,120,100,1,1");
         config.addDefault("Blazeborn Ability 4", "true,90,150,2,2");
         config.addDefault("Blazeborn Ability 5", "true,60,300,3,3");
         config.addDefault("Blazeborn On Fire Boost",10);
@@ -135,7 +135,7 @@ public class ConfigHandler {
         blazeEffect5 = config.getString("Blazeborn Effects 5", "30,0.25,8.0,4.0,true,1.0,60");
         blazeAbility1 = config.getString("Blazeborn Ability 1", "false,30,0,0,0");
         blazeAbility2 = config.getString("Blazeborn Ability 2", "true,180,60,0,0");
-        blazeAbility3 = config.getString("Blazeborn Ability 2", "true,120,100,1,1");
+        blazeAbility3 = config.getString("Blazeborn Ability 3", "true,120,100,1,1");
         blazeAbility4 = config.getString("Blazeborn Ability 4", "true,90,150,2,2");
         blazeAbility5 = config.getString("Blazeborn Ability 5", "true,60,300,3,3");
         blazeOnFire = config.getInt("Blazeborn On Fire Boost",10);

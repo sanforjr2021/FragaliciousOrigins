@@ -3,20 +3,16 @@ package com.github.sanforjr2021.origins;
 import com.github.sanforjr2021.util.MessageUtil;
 import com.github.sanforjr2021.util.PlayerUtils;
 import com.github.sanforjr2021.util.bossBar.OriginBossBarManager;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
-
-import static com.github.sanforjr2021.util.PlayerUtils.getPlayer;
 
 
 public abstract class Origin {
     private OriginType originType;
     private UUID uuid;
     private boolean isSleeping = false;
+    private boolean isTemp = false;
     public Origin(OriginType origin, Player player){
         originType = origin;
         uuid = player.getUniqueId();
@@ -60,5 +56,11 @@ public abstract class Origin {
         if(!isSleeping && getPlayer().isSleeping()){
             getPlayer().wakeup(true);
         }
+    }
+    public boolean isTemp() {
+        return isTemp;
+    }
+    public void setTemp(boolean temp) {
+        isTemp = temp;
     }
 }

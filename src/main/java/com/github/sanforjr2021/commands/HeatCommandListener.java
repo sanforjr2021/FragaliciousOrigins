@@ -26,9 +26,11 @@ public class HeatCommandListener implements CommandExecutor {
                 ((Blazeborn) origin).setHeat(heat);
                 if (isPlayer) {
                     MessageUtil.sendMessage("Updated " + playerName + " heat to value of " + heat, ((Player) commandSender).getPlayer());
+                    return true;
                 }
             } else {
                 MessageUtil.sendMessage("Player is not a Blazeborn", ((Player) commandSender).getPlayer());
+                return true;
             }
         } catch (NullPointerException e) {
             MessageUtil.sendMessage("Invalid player or heat.", ((Player) commandSender).getPlayer());

@@ -8,6 +8,7 @@ import com.github.sanforjr2021.util.PlayerUtils;
 import com.github.sanforjr2021.util.bossBar.BossBarType;
 import com.github.sanforjr2021.util.bossBar.OriginBossBar;
 import com.github.sanforjr2021.util.bossBar.OriginBossBarManager;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
@@ -29,7 +30,6 @@ public class Blazeborn extends Origin {
         }else{
             MessageUtil.sendMessage("Your heat was set to " + heat, player);
         }
-        OriginBossBarManager.addBossBar(player.getUniqueId(), new OriginBossBar(player, BossBarType.HEAT_BAR, "Loading Heat", BarColor.RED, 0.5));
         isScorching = false;
         setHeat(heat);
 
@@ -73,36 +73,37 @@ public class Blazeborn extends Origin {
         String title = this.heat + "°C";
         BarColor color;
         double percentage;
+        //todo: find better solution to ChatColor
         switch (level){
             case INCENDIUM:
-                title = "&cIncendium: " + title;
+                title = ChatColor.translateAlternateColorCodes('&',"&cIncendium: " + title);
                 percentage = ((double) heat - HeatLevel.INFERNO.getMaxHeat()) / ( (double) HeatLevel.INCENDIUM.getMaxHeat() - HeatLevel.INFERNO.getMaxHeat());
                 color = BarColor.RED;
                 break;
             case INFERNO:
-                title = "&6Inferno: " + title;
+                title = ChatColor.translateAlternateColorCodes('&',"&6Inferno: " + title);
                 percentage = ((double) heat - HeatLevel.FlAME.getMaxHeat() ) / ( (double) HeatLevel.INFERNO.getMaxHeat() - HeatLevel.FlAME.getMaxHeat());
                 color = BarColor.YELLOW;
                 break;
             case FlAME:
-                title = "&aFLAME: " + title;
+                title = ChatColor.translateAlternateColorCodes('&',"&aFLAME: " + title);
                 percentage = ((double) heat - HeatLevel.KINDLE.getMaxHeat()) / ( (double) HeatLevel.FlAME.getMaxHeat() - HeatLevel.KINDLE.getMaxHeat());
                 color = BarColor.GREEN;
                 break;
             case KINDLE:
-                title = "&5Kindle: " + title;
+                title = ChatColor.translateAlternateColorCodes('&',"&5Kindle: " + title);
                 percentage = ((double) heat - HeatLevel.CINDER.getMaxHeat()) / ( (double) HeatLevel.KINDLE.getMaxHeat() - HeatLevel.CINDER.getMaxHeat());
                 color = BarColor.PURPLE;
                 break;
             default:
-                title = "&1Cinder: " + title;
+                title = ChatColor.translateAlternateColorCodes('&',"&1Cinder: " + title);
                 percentage = ((double) heat) / ( (double) HeatLevel.CINDER.getMaxHeat());
                 color = BarColor.BLUE;
                 break;
         }
-        OriginBossBarManager.geOriginBossBar(getPlayer().getUniqueId(), BossBarType.HEAT_BAR).setColor(color);
-        OriginBossBarManager.geOriginBossBar(getPlayer().getUniqueId(), BossBarType.HEAT_BAR).setProgress(percentage);
-        OriginBossBarManager.geOriginBossBar(getPlayer().getUniqueId(), BossBarType.HEAT_BAR).setTitle(title);
+        getBossBar().setColor(color);
+        getBossBar().setProgress(percentage);
+        getBossBar().setTitle(title);
     }
 
     public HeatLevel getLevel() {
@@ -212,7 +213,6 @@ public class Blazeborn extends Origin {
             abilityHeat = Integer.parseInt(argsAbility[2]);
             abilityDuration = Integer.parseInt(argsAbility[3]);
             damageDuration = Integer.parseInt(argsAbility[4]);
-            MessageUtil.log("Level :" +  level + "    Heat: " + heatConfig + "   Effect: " + effectConfig + "   Ability: " + abilityConfig);
         }
 
         public int getLevel() {
@@ -305,5 +305,10 @@ public class Blazeborn extends Origin {
         }
     }
 
-
+    private OriginBossBar getBossBar(){
+            if( OriginBossBarManager.geOriginBossBar(getPlayer().getUniqueId(),BossBarType.HEAT_BAR) == null){
+                OriginBossBarManager.addBossBar(this.getPlayer().getUniqueId(), new OriginBossBar(this.getPlayer(), BossBarType.HEAT_BAR, "Loading Heat", BarColor.RED, 0.5));
+            }
+            return OriginBossBarManager.geOriginBossBar(getPlayer().getUniqueId(),BossBarType.HEAT_BAR);
+    }
 }

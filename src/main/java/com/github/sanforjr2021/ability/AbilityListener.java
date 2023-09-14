@@ -299,6 +299,7 @@ public class AbilityListener implements Listener {
         LevitateOnDamageAbility.reload();
         ReducedHungerAbility.reload();
         SpawnBirdAbility.reload();
+        HeatLossOnDamageAbility.reload();
         HeatAbility.reload();
     }
 

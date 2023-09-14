@@ -78,4 +78,10 @@ public class PlayerOriginDAO {
         }
         return true;
     }
+    private long getUnixTimestamp(){
+        return System.currentTimeMillis() / 1000L;
+    }
+    public static boolean getExpiredTempOrigins(){
+        return true;
+    }
 }

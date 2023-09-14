@@ -38,7 +38,11 @@ public class OriginCommandListener implements TabExecutor {
                     try {
                         OriginType originType = OriginType.valueOf(strings[1].toUpperCase());
                         Player player = ((Player) commandSender).getPlayer();
-                        PlayerManager.setOrigin(player.getUniqueId(), originType.getOrigin(player));
+                        if(PlayerManager.getOrigin(player.getUniqueId()) == null || PlayerManager.getOrigin(player.getUniqueId()).getOriginType() == OriginType.UNASSIGNED){
+                            PlayerManager.setOrigin(player.getUniqueId(), originType.getOrigin(player));
+                        }
+                        MessageUtil.sendMessage("&cYou cannot select an origin if you already have an origin.", player);
+                        return true;
                     } catch (Exception e) {
                         MessageUtil.logWarning(e.toString());
                         return false;
