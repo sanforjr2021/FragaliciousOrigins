@@ -6,7 +6,6 @@ import com.github.sanforjr2021.util.MessageUtil;
 import com.github.sanforjr2021.util.bossBar.OriginBossBarManager;
 import com.github.sanforjr2021.util.time.TimeCycle;
 import org.bukkit.World;
-import org.bukkit.entity.Blaze;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -34,7 +33,6 @@ public class PlayerManager {
         if (!joiningServer) { //Is changing origin, and not relogging
             OriginBossBarManager.removeBossBars(uuid);
             PlayerOriginDAO.write(uuid, origin.getOriginType());
-
         }
     }
 
@@ -104,9 +102,10 @@ public class PlayerManager {
         Shulk.reload();
         Chicken.reload();
         Blazeborn.reload();
+        Merling.reload();
         //Update all players origins
         Collection<Player> players = (Collection<Player>) FragaliciousOrigins.getInstance().getServer().getOnlinePlayers();
-        for(Player player : players){
+        for (Player player : players) {
             try {
                 OriginType originType = PlayerOriginDAO.getOrigin(player.getUniqueId());
                 PlayerManager.setOrigin(player.getUniqueId(), originType.getOrigin(player), true);

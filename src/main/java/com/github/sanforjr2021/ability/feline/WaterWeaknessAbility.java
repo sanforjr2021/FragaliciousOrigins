@@ -13,12 +13,11 @@ public class WaterWeaknessAbility extends Ability {
     public WaterWeaknessAbility(PlayerMoveEvent e) {
         Player player = e.getPlayer();
         Feline feline = (Feline) PlayerManager.getOrigin(player.getUniqueId());
-        if(player.isInWater() && !feline.isWet()){
+        if(PlayerUtils.isWetIgnoringConduit(player) && !player.hasPotionEffect(PotionEffectType.CONDUIT_POWER) && !feline.isWet()){
             PlayerUtils.addEffect(player, PotionEffectType.WEAKNESS, 1);
             PlayerUtils.addEffect(player, PotionEffectType.SLOW, 2);
             feline.setWet(true);
-        }
-        if(!player.isInWater() && feline.isWet()){
+        }else if(((!PlayerUtils.isWet(player)) || player.hasPotionEffect(PotionEffectType.CONDUIT_POWER))  && feline.isWet()){
             PlayerUtils.removeEffect(player, PotionEffectType.WEAKNESS);
             PlayerUtils.removeEffect(player, PotionEffectType.SLOW);
             feline.setWet(false);

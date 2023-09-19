@@ -1,13 +1,15 @@
 package com.github.sanforjr2021.ability;
 
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
-import com.github.sanforjr2021.ability.Chicken.CliffSleepAbility;
-import com.github.sanforjr2021.ability.Chicken.ReducedHungerAbility;
-import com.github.sanforjr2021.ability.Chicken.SlowfallAbility;
-import com.github.sanforjr2021.ability.Chicken.SpawnBirdAbility;
+import com.github.sanforjr2021.ability.chicken.CliffSleepAbility;
+import com.github.sanforjr2021.ability.chicken.ReducedHungerAbility;
+import com.github.sanforjr2021.ability.chicken.SlowfallAbility;
+import com.github.sanforjr2021.ability.chicken.SpawnBirdAbility;
 import com.github.sanforjr2021.ability.blazeborn.*;
 import com.github.sanforjr2021.ability.enderian.*;
 import com.github.sanforjr2021.ability.feline.*;
+import com.github.sanforjr2021.ability.merling.*;
 import com.github.sanforjr2021.ability.phantom.GhostAbility;
 import com.github.sanforjr2021.ability.phantom.ShadowSkinAbility;
 import com.github.sanforjr2021.ability.shared.*;
@@ -20,7 +22,10 @@ import com.github.sanforjr2021.data.jdbc.PlayerOriginDAO;
 import com.github.sanforjr2021.origins.*;
 import com.github.sanforjr2021.util.MessageUtil;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -30,6 +35,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.SQLException;
@@ -68,6 +74,9 @@ public class AbilityListener implements Listener {
                             case BLAZEBORN:
                                 new HeatAbility((Blazeborn) playerOrigin.getValue());
                                 break;
+                            case MERLING:
+                                new MerlingPassiveAbility((Merling) playerOrigin.getValue());
+                                break;
                         }
                     }
                 }
@@ -79,7 +88,6 @@ public class AbilityListener implements Listener {
             }
         }.runTaskTimer(getInstance(), 20, 5);
     }
-
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
 
@@ -95,6 +103,9 @@ public class AbilityListener implements Listener {
                 break;
             case CHICKEN:
                 new SlowfallAbility(e);
+                break;
+            case MERLING:
+                new SpeedSwimAbility(e);
                 break;
             case UNASSIGNED:
                 MessageUtil.sendMessage("You must select an origin first before you can continue", e.getPlayer());
@@ -123,8 +134,10 @@ public class AbilityListener implements Listener {
             switch (origin.getOriginType()) {
                 case CHICKEN:
                     new ReducedHungerAbility(e);
+                    break;
                 case BLAZEBORN:
                     new HungerlessAbility(e);
+                    break;
             }
         }
 
@@ -151,6 +164,8 @@ public class AbilityListener implements Listener {
             case BLAZEBORN:
                 new ExtinguishAbility(e, (Blazeborn) origin);
                 break;
+            case MERLING:
+                new TridentTotemAbility(e, (Merling) origin);
         }
     }
 
@@ -247,7 +262,13 @@ public class AbilityListener implements Listener {
                 case BLAZEBORN:
                     new FlameAttackAbility(e);
                     break;
+                case MERLING:
+                    new TridentAmplifierAbility(e);
+
             }
+        }
+        if(e.getDamager() instanceof Trident){
+            new ThrownTridentAmplifierAbility(e);
         }
     }
 
@@ -265,6 +286,8 @@ public class AbilityListener implements Listener {
             case BLAZEBORN:
                 new CannotEatFoodAbility(e);
                 break;
+            case MERLING:
+                new MerlingWaterDrink(e);
         }
     }
 
@@ -301,6 +324,12 @@ public class AbilityListener implements Listener {
         SpawnBirdAbility.reload();
         HeatLossOnDamageAbility.reload();
         HeatAbility.reload();
+        TridentTotemAbility.reload();
+        SpeedSwimAbility.reload();
+        MerlingPassiveAbility.reload();
+        MerlingWaterDrink.reload();
+        TridentAmplifierAbility.reload();
+        ThrownTridentAmplifierAbility.reload();
     }
 
     public static void primaryAbility(Origin origin) {
@@ -322,6 +351,9 @@ public class AbilityListener implements Listener {
                 break;
             case BLAZEBORN:
                 new BurnItemAbility((Blazeborn) origin);
+                break;
+            case MERLING:
+                new ToggleSpeedSwimAbility((Merling) origin);
                 break;
         }
     }

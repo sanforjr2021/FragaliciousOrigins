@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 
 public class HeatAbility extends Ability {
     private static int ON_FIRE_GAIN;
@@ -21,7 +22,7 @@ public class HeatAbility extends Ability {
             drain += ON_FIRE_GAIN;
         } else if (!(player.getWorld().getEnvironment() == World.Environment.NETHER && !heatLevel.isDrainInNether())) {
             drain = drain - heatLevel.getPassiveDrain();
-            if (PlayerUtils.isWet(player)) {
+            if (PlayerUtils.isWetIgnoringConduit(player) && !player.hasPotionEffect(PotionEffectType.CONDUIT_POWER)) {
                 drain = drain - heatLevel.getWaterDrain();
             }
         }

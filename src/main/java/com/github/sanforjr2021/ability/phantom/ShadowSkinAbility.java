@@ -31,7 +31,7 @@ public class ShadowSkinAbility extends Ability {
         }
         Block block = player.getLocation().getBlock();
         int lightExposure = phantom.getLightExposure();
-        if (TimeUtil.getCurrentTime(player) == TimeCycle.DAY && block.getLightFromSky() > 10) {
+        if (TimeUtil.getCurrentTime(player) == TimeCycle.DAY && block.getLightFromSky() > 10 && !PlayerUtils.isWet(player)) {
             //burn in day if past exposure limit
             if (lightExposure >= LIGHT_EXPOSURE_LIMIT) {
                 if (player.getFireTicks() < 5 && !player.hasPotionEffect(PotionEffectType.FIRE_RESISTANCE)) {

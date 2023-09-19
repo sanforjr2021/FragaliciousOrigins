@@ -23,6 +23,8 @@ public class ConfigHandler {
     private static String blazeAbility1, blazeAbility2, blazeAbility3, blazeAbility4, blazeAbility5;
     private static String blazeFoodBlazePowder, blazeFoodBlazeRod, blazeFoodCoal, blazeFoodCoalBlock, blazeFoodCharcoal, blazeFoodFireCharge;
     private static int blazeOnFire, blazeStartingHeat;
+    private static int merlingBreathInSeconds, merlingConduitPowerAmplifier, merlingTridentBreakDamage;
+    private static double merlingVelocityMultiplier, merlingTridentDamageMultiplier;
     public ConfigHandler(FragaliciousOrigins instance) {
         config = instance.getConfig();
         buildConfig(instance);
@@ -90,11 +92,14 @@ public class ConfigHandler {
         config.addDefault("Blazeborn Food Coal Block", "4,1000");
         config.addDefault("Blazeborn Food Charcoal", "3,50");
         config.addDefault("Blazeborn Food Fire Charge", "5,500");
-
+        config.addDefault("Merling Breath In Seconds", "30");
+        config.addDefault("Merling Conduit Power Amplifier", 2);
+        config.addDefault("Merling Velocity Multiplier", 2.0);
+        config.addDefault("Merling Trident Multiplier", 1.5);
+        config.addDefault("Merling Trident Death Damage", 83);
         config.options().copyDefaults(true);
         instance.saveConfig();
     }
-
     public void loadConfig() {
         jdbcURL = config.getString("JDBC URL");
         bedrockPrefix = config.getString("Bedrock Prefix",".");
@@ -146,6 +151,11 @@ public class ConfigHandler {
         blazeFoodCoalBlock = config.getString("Blazeborn Food Coal Block", "4,1000");
         blazeFoodCharcoal = config.getString("Blazeborn Food Charcoal", "3,50");
         blazeFoodFireCharge = config.getString("Blazeborn Food Fire Charge", "5,500");
+        merlingBreathInSeconds =  config.getInt("Merling Breath In Seconds", 30);
+        merlingConduitPowerAmplifier =  config.getInt("Merling Conduit Power Amplifier", 2);
+        merlingVelocityMultiplier = config.getDouble("Merling Velocity Multiplier", 2.0);
+        merlingTridentDamageMultiplier =  config.getDouble("Merling Trident Multiplier", 1.5);
+        merlingTridentBreakDamage = config.getInt("Merling Trident Death Damage", 83);
     }
 
     public static String getJdbcURL() {
@@ -345,5 +355,26 @@ public class ConfigHandler {
 
     public static int getBlazeStartingHeat() {
         return blazeStartingHeat;
+    }
+
+    public static int getMerlingBreathInSeconds() {
+
+        return merlingBreathInSeconds;
+    }
+
+    public static int getMerlingConduitPowerAmplifier() {
+        return merlingConduitPowerAmplifier;
+    }
+
+    public static double getMerlingVelocityMultiplier() {
+        return merlingVelocityMultiplier;
+    }
+
+    public static double getMerlingTridentDamageMultiplier() {
+        return merlingTridentDamageMultiplier;
+    }
+
+    public static int getMerlingTridentBreakDamage() {
+        return merlingTridentBreakDamage;
     }
 }

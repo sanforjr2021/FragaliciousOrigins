@@ -34,6 +34,8 @@ public enum OriginType {
                 return new Blazeborn(player);
             case HUMAN:
                 return new Human(player);
+            case MERLING:
+                return new Merling(player);
             default:
                 return new Unassigned(player);
         }

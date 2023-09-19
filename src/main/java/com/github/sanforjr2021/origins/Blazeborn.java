@@ -297,9 +297,7 @@ public class Blazeborn extends Origin {
             PlayerUtils.setToughness(player, toughness);
             if(regen){
                 player.setFoodLevel(20);
-                player.setSaturation(20f);
             }else{
-                player.setSaturation(0f);
                 player.setFoodLevel(10);
             }
         }

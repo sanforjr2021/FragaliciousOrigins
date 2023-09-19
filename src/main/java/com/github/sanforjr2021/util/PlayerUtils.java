@@ -1,13 +1,11 @@
 package com.github.sanforjr2021.util;
 
 import com.github.sanforjr2021.FragaliciousOrigins;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Statistic;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
+import org.bukkit.block.Conduit;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -124,6 +122,10 @@ public class PlayerUtils {
         }
     }
     public static boolean isWet(Player player){
+        return player.hasPotionEffect(PotionEffectType.CONDUIT_POWER)
+                || isWetIgnoringConduit(player);
+    }
+    public static boolean isWetIgnoringConduit(Player player){
         return (player.getWorld().hasStorm() && player.getWorld().getHighestBlockYAt(player.getLocation()) <= player.getLocation().getY()) || player.isInWater();
     }
     public static void generateParticle(LivingEntity entity, Particle particle, int count){
@@ -132,6 +134,23 @@ public class PlayerUtils {
     public static void generateParticle(LivingEntity entity, Material material, int count){
         BlockData data = Bukkit.createBlockData(material);
         entity.getWorld().spawnParticle(Particle.BLOCK_CRACK, entity.getLocation().add(0, 1, 0), count, 0.2, 0.2, 0.2, 0.0, data);
+    }
+    public static boolean isInConduitRange(Player player, int radius) {
+        Location playerLocation = player.getLocation();
+        int playerX = playerLocation.getBlockX();
+        int playerY = playerLocation.getBlockY();
+        int playerZ = playerLocation.getBlockZ();
+        for (int x = playerX - radius; x <= playerX + radius; x++) {
+            for (int y = playerY - radius; y <= playerY + radius; y++) {
+                for (int z = playerZ - radius; z <= playerZ + radius; z++) {
+                    Block block = player.getWorld().getBlockAt(x, y, z);
+                    if (block.getType() == Material.CONDUIT) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
     public static void resetSleep(Player player){
         player.setStatistic(Statistic.TIME_SINCE_REST, 0);
