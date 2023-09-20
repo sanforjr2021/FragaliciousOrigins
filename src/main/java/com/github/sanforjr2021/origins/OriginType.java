@@ -36,6 +36,8 @@ public enum OriginType {
                 return new Human(player);
             case MERLING:
                 return new Merling(player);
+            case ARACHNID:
+                return new Arachnid(player);
             default:
                 return new Unassigned(player);
         }

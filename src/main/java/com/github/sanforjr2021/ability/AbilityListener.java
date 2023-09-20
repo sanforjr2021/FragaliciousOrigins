@@ -1,7 +1,10 @@
 package com.github.sanforjr2021.ability;
 
-import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+import com.github.sanforjr2021.ability.arachnid.ClimbAbility;
+import com.github.sanforjr2021.ability.arachnid.SpiderSensesAbility;
+import com.github.sanforjr2021.ability.arachnid.ToggleClimbAbility;
+import com.github.sanforjr2021.ability.arachnid.WebbedAbility;
 import com.github.sanforjr2021.ability.chicken.CliffSleepAbility;
 import com.github.sanforjr2021.ability.chicken.ReducedHungerAbility;
 import com.github.sanforjr2021.ability.chicken.SlowfallAbility;
@@ -22,8 +25,6 @@ import com.github.sanforjr2021.data.jdbc.PlayerOriginDAO;
 import com.github.sanforjr2021.origins.*;
 import com.github.sanforjr2021.util.MessageUtil;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
@@ -90,13 +91,15 @@ public class AbilityListener implements Listener {
     }
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
-
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
         switch (origin.getOriginType()) {
             case FELINE:
                 new WaterWeaknessAbility(e);
+                new NightVisionAbility(e);
+                break;
             case ARACHNID:
                 new NightVisionAbility(e);
+                new ClimbAbility(e);
                 break;
             case ENDERIAN:
                 new VoidEscapeAbility(origin);
@@ -125,6 +128,7 @@ public class AbilityListener implements Listener {
                 break;
             case CHICKEN:
                 new CliffSleepAbility(e);
+                break;
         }
     }
     @EventHandler
@@ -264,7 +268,10 @@ public class AbilityListener implements Listener {
                     break;
                 case MERLING:
                     new TridentAmplifierAbility(e);
-
+                    break;
+                case ARACHNID:
+                    new WebbedAbility(e);
+                    break;
             }
         }
         if(e.getDamager() instanceof Trident){
@@ -288,6 +295,7 @@ public class AbilityListener implements Listener {
                 break;
             case MERLING:
                 new MerlingWaterDrink(e);
+                break;
         }
     }
 
@@ -330,6 +338,9 @@ public class AbilityListener implements Listener {
         MerlingWaterDrink.reload();
         TridentAmplifierAbility.reload();
         ThrownTridentAmplifierAbility.reload();
+        WebbedAbility.reload();
+        ClimbAbility.reload();
+        SpiderSensesAbility.reload();
     }
 
     public static void primaryAbility(Origin origin) {
@@ -355,6 +366,9 @@ public class AbilityListener implements Listener {
             case MERLING:
                 new ToggleSpeedSwimAbility((Merling) origin);
                 break;
+            case ARACHNID:
+                new SpiderSensesAbility( (Arachnid) origin);
+                break;
         }
     }
 
@@ -368,6 +382,9 @@ public class AbilityListener implements Listener {
                 break;
             case BLAZEBORN:
                 new PurgeAbility((Blazeborn) origin);
+                break;
+            case ARACHNID:
+                new ToggleClimbAbility((Arachnid) origin);
                 break;
         }
     }

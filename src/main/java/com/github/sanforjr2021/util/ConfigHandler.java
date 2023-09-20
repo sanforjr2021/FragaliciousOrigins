@@ -25,6 +25,8 @@ public class ConfigHandler {
     private static int blazeOnFire, blazeStartingHeat;
     private static int merlingBreathInSeconds, merlingConduitPowerAmplifier, merlingTridentBreakDamage;
     private static double merlingVelocityMultiplier, merlingTridentDamageMultiplier;
+    private static double arachnidVelocity,arachnidWebChance;
+    private static int arachnidSpiderSenseRange,arachnidSpiderSenseDuraion,arachnidSpiderSenseCooldown,arachnidWebDuration, arachnidWebAmplifier;
     public ConfigHandler(FragaliciousOrigins instance) {
         config = instance.getConfig();
         buildConfig(instance);
@@ -92,11 +94,20 @@ public class ConfigHandler {
         config.addDefault("Blazeborn Food Coal Block", "4,1000");
         config.addDefault("Blazeborn Food Charcoal", "3,50");
         config.addDefault("Blazeborn Food Fire Charge", "5,500");
+        config.addDefault("#####################Merling Settings#####################", "");
         config.addDefault("Merling Breath In Seconds", "30");
         config.addDefault("Merling Conduit Power Amplifier", 2);
         config.addDefault("Merling Velocity Multiplier", 2.0);
         config.addDefault("Merling Trident Multiplier", 1.5);
         config.addDefault("Merling Trident Death Damage", 83);
+        config.addDefault("#####################Arachnid Settings#####################", "");
+        config.addDefault("Arachnid Velocity",0.25);
+        config.addDefault("Arachnid Spider Sense Range",15);
+        config.addDefault("Arachnid Spider Sense Duration in Seconds",10);
+        config.addDefault("Arachnid Spider Sense Cooldown in Seconds", 60);
+        config.addDefault("Arachnid Web Duration in Ticks",20);
+        config.addDefault("Arachnid Web Amplifier",2);
+        config.addDefault("Arachnid Web Chance",0.1);
         config.options().copyDefaults(true);
         instance.saveConfig();
     }
@@ -156,6 +167,13 @@ public class ConfigHandler {
         merlingVelocityMultiplier = config.getDouble("Merling Velocity Multiplier", 2.0);
         merlingTridentDamageMultiplier =  config.getDouble("Merling Trident Multiplier", 1.5);
         merlingTridentBreakDamage = config.getInt("Merling Trident Death Damage", 83);
+        arachnidVelocity = config.getDouble("Arachnid Velocity",0.25);
+        arachnidSpiderSenseRange = config.getInt("Arachnid Spider Sense Range",15);
+        arachnidSpiderSenseDuraion = config.getInt("Arachnid Spider Sense Duration in Seconds",10);
+        arachnidSpiderSenseCooldown = config.getInt("Arachnid Spider Sense Cooldown in Seconds", 60);
+        arachnidWebDuration = config.getInt("Arachnid Web Duration in Ticks",20);
+        arachnidWebChance = config.getDouble("Arachnid Web Chance",0.1);
+        arachnidWebAmplifier = config.getInt("Arachnid Web Amplifier",2);
     }
 
     public static String getJdbcURL() {
@@ -376,5 +394,33 @@ public class ConfigHandler {
 
     public static int getMerlingTridentBreakDamage() {
         return merlingTridentBreakDamage;
+    }
+
+    public static double getArachnidVelocity() {
+        return arachnidVelocity;
+    }
+
+    public static double getArachnidWebChance() {
+        return arachnidWebChance;
+    }
+
+    public static int getArachnidSpiderSenseRange() {
+        return arachnidSpiderSenseRange;
+    }
+
+    public static int getArachnidSpiderSenseDuraion() {
+        return arachnidSpiderSenseDuraion;
+    }
+
+    public static int getArachnidSpiderSenseCooldown() {
+        return arachnidSpiderSenseCooldown;
+    }
+
+    public static int getArachnidWebDuration() {
+        return arachnidWebDuration;
+    }
+
+    public static int getArachnidWebAmplifier() {
+        return arachnidWebAmplifier;
     }
 }
