@@ -7,4 +7,22 @@ main: com.github.sanforjr2021.FragaliciousOrigins
 api-version: 1.13
 commands:
   origin:
-    aliases: [fragorigin, fragorigins, origins, fragaliciousorigins, fragaliciousorigin]
+    description: Select your origin by using /origin choose Origin
+    usage: /origin choose <OriginName>
+  leavebed:
+    description: Leave your bed as a nocturnal origin
+    usage: /leavebed
+  primaryability:
+    description: Use your primary ability
+    usage: /primaryAbility
+  secondaryability:
+    description: Use your secondary ability (if applicable)
+    usage: /secondaryAbility
+  shulkchest:
+    description: View another players shulk inventory
+    usage: /shulkchest <player>
+    permission: fragalicious.origins.command.shulkchest
+  heat:
+    description: Set the heat of a player.
+    usage: /heat <player> <temperature>
+    permission: fragalicious.origins.command.heat
