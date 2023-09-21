@@ -91,7 +91,6 @@ public class PlayerManager {
                 }
             }.runTaskTimer(getInstance(), 02L, 10000L);
         }
-
     }
 
     public static void reload() {
@@ -103,6 +102,8 @@ public class PlayerManager {
         Chicken.reload();
         Blazeborn.reload();
         Merling.reload();
+        Elytrian.reload();
+        Arachnid.reload();
         //Update all players origins
         Collection<Player> players = (Collection<Player>) FragaliciousOrigins.getInstance().getServer().getOnlinePlayers();
         for (Player player : players) {

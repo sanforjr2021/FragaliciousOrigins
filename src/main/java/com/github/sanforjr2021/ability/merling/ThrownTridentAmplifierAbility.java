@@ -15,7 +15,6 @@ import org.bukkit.potion.PotionEffectType;
 public class ThrownTridentAmplifierAbility extends Ability {
     private static double TRIDENT_DAMAGE_MULTIPLIER;
     public ThrownTridentAmplifierAbility(EntityDamageByEntityEvent e) {
-    if (e.getDamager() instanceof Trident) {
         Trident trident = (Trident) e.getDamager();
         if (trident.getShooter() instanceof Player) {
             Player shooter = (Player) trident.getShooter();
@@ -30,7 +29,6 @@ public class ThrownTridentAmplifierAbility extends Ability {
                 }
             }
         }
-    }
 }
 
     public static void reload(){

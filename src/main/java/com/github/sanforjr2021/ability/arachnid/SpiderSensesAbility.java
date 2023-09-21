@@ -5,6 +5,7 @@ import com.github.sanforjr2021.ability.Ability;
 import com.github.sanforjr2021.origins.Arachnid;
 import com.github.sanforjr2021.util.ConfigHandler;
 import com.github.sanforjr2021.util.PlayerUtils;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -21,6 +22,7 @@ public class SpiderSensesAbility extends Ability {
             this.sendCooldownMessage("Spider Senses", arachnid.getCooldown(),arachnid.getPlayer());
         }else{
             Player player = arachnid.getPlayer();
+            player.playSound(player, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.0f,2.0f);
             Iterator<Entity> entities = player.getLocation().getNearbyEntities(RANGE,RANGE,RANGE).iterator();
             while(entities.hasNext()){
                 Entity entity = entities.next();

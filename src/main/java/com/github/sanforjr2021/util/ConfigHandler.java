@@ -4,7 +4,7 @@ import com.github.sanforjr2021.FragaliciousOrigins;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class ConfigHandler {
-    private FileConfiguration config;
+    private final FileConfiguration config;
     private static String jdbcURL, bedrockPrefix, msgPrefix;
     //Phantom
     private static int phantomGhostmodeCooldown, phantomGhostModeDuration, phantomLightExposuretime, phantomFireResistDamageChance;
@@ -15,7 +15,7 @@ public class ConfigHandler {
     //Enderian
     private static int enderianMaxHealth, enderianTeleportCooldown, enderianTeleportDistance, enderianDamageTeleportRange, enderianDamageTeleportAttempts;
     //Shulk
-    private static double shulkToughness,shulkArmor,shulkKnockback,shulkSpeed,shulkFoodLossChance, shulkSelfLevitationChance, shulkTargetLevitationChance;
+    private static double shulkToughness, shulkArmor, shulkKnockback, shulkSpeed, shulkFoodLossChance, shulkSelfLevitationChance, shulkTargetLevitationChance;
     private static double chickenHungerCancel, chickenSpeed;
     private static int chickenSpawnBirdCooldown;
     private static String blazeHeat1, blazeHeat2, blazeHeat3, blazeHeat4, blazeHeat5;
@@ -25,8 +25,11 @@ public class ConfigHandler {
     private static int blazeOnFire, blazeStartingHeat;
     private static int merlingBreathInSeconds, merlingConduitPowerAmplifier, merlingTridentBreakDamage;
     private static double merlingVelocityMultiplier, merlingTridentDamageMultiplier;
-    private static double arachnidVelocity,arachnidWebChance;
-    private static int arachnidSpiderSenseRange,arachnidSpiderSenseDuraion,arachnidSpiderSenseCooldown,arachnidWebDuration, arachnidWebAmplifier;
+    private static double arachnidVelocity, arachnidWebChance;
+    private static int arachnidSpiderSenseRange, arachnidSpiderSenseDuraion, arachnidSpiderSenseCooldown, arachnidWebDuration, arachnidWebAmplifier;
+    private static double elytrianArmorSpeedModifer, elytrianAttackSpeedModifer, elytrianAirCurrentChance, elytrianAirCurrentMultiplier, elytrianFlyingVelocityAbilityMultiplier, elytrianGroundVerticalVelocityAbilityMultiplier, elytrianImpactDamageMultiplier;
+    private static int elytrianCooldown, elytrianCeilingLimit, elytrianCeilingSlownessAmplifier, elytrianAirCurrentHeight;
+
     public ConfigHandler(FragaliciousOrigins instance) {
         config = instance.getConfig();
         buildConfig(instance);
@@ -66,7 +69,7 @@ public class ConfigHandler {
         config.addDefault("######################Chicken Settings#####################", "");
         config.addDefault("Chicken Speed", 0.35);
         config.addDefault("Chicken Hunger Cancel Chance", 0.2);
-        config.addDefault("Chicken Spawn Bird Cooldown",180);
+        config.addDefault("Chicken Spawn Bird Cooldown", 180);
         config.addDefault("#####################Blazeborn Settings#####################", "");
         config.addDefault("Maximum Heat (int), Passive Drain (int), Water Drain (int), damageDrain (int), Passive Drains In Nether (boolean), Gain Heat when burning (boolean)", "");
         config.addDefault("Blazeborn Heat 1", "100,1,5,5,false,true");
@@ -74,7 +77,7 @@ public class ConfigHandler {
         config.addDefault("Blazeborn Heat 3", "1000,25,50,75,false,false");
         config.addDefault("Blazeborn Heat 4", "5000,35,100,100,true,false");
         config.addDefault("Blazeborn Heat 5", "10000,50,150,115,true,false");
-        config.addDefault("Health(int),Speed(double),Armor Bonus(double), Toughness (double),Regen (boolean),Burn Chance(double), Burn Duration in seconds (int)","");
+        config.addDefault("Health(int),Speed(double),Armor Bonus(double), Toughness (double),Regen (boolean),Burn Chance(double), Burn Duration in seconds (int)", "");
         config.addDefault("Blazeborn Effects 1", "16,0.18,0.0,0.0,false,0.0,0");
         config.addDefault("Blazeborn Effects 2", "20,0.2,0.0,00.0,true,0.0,0");
         config.addDefault("Blazeborn Effects 3", "22,0.21,2.0,1.0,true,0.25,20");
@@ -86,8 +89,8 @@ public class ConfigHandler {
         config.addDefault("Blazeborn Ability 3", "true,120,100,1,1");
         config.addDefault("Blazeborn Ability 4", "true,90,150,2,2");
         config.addDefault("Blazeborn Ability 5", "true,60,300,3,3");
-        config.addDefault("Blazeborn On Fire Boost",10);
-        config.addDefault("Starting Heat",100);
+        config.addDefault("Blazeborn On Fire Boost", 10);
+        config.addDefault("Starting Heat", 100);
         config.addDefault("Blazeborn Food Blaze Powder", "3,250");
         config.addDefault("Blazeborn Food Blaze Rod", "3,100");
         config.addDefault("Blazeborn Food Coal", "4,250");
@@ -101,44 +104,57 @@ public class ConfigHandler {
         config.addDefault("Merling Trident Multiplier", 1.5);
         config.addDefault("Merling Trident Death Damage", 83);
         config.addDefault("#####################Arachnid Settings#####################", "");
-        config.addDefault("Arachnid Velocity",0.25);
-        config.addDefault("Arachnid Spider Sense Range",15);
-        config.addDefault("Arachnid Spider Sense Duration in Seconds",10);
+        config.addDefault("Arachnid Velocity", 0.25);
+        config.addDefault("Arachnid Spider Sense Range", 15);
+        config.addDefault("Arachnid Spider Sense Duration in Seconds", 10);
         config.addDefault("Arachnid Spider Sense Cooldown in Seconds", 60);
-        config.addDefault("Arachnid Web Duration in Ticks",20);
-        config.addDefault("Arachnid Web Amplifier",2);
-        config.addDefault("Arachnid Web Chance",0.1);
+        config.addDefault("Arachnid Web Duration in Ticks", 20);
+        config.addDefault("Arachnid Web Amplifier", 2);
+        config.addDefault("Arachnid Web Chance", 0.1);
+        config.addDefault("#####################Elytrian Settings#####################", "");
+        config.addDefault("Elytrian Armor Speed Modifier", 0.008);
+        config.addDefault("Elytrian Attack Speed Modifier", 2.5);
+        config.addDefault("Elytrian Air Current Chance", 0.01);
+        config.addDefault("Elytrian Air Current Multiplier", 2.5);
+        config.addDefault("Elytrian Air Current Height", 120);
+        config.addDefault("Elytrian Flying Velocity Ability Multiplier", 3.0);
+        config.addDefault("Elytrian Ground Vertical Velocity Ability", 2.5);
+        config.addDefault("Elytrian Cooldown", 30);
+        config.addDefault("Elytrian Ceiling Limit", 6);
+        config.addDefault("Elytrian Ceiling Slowness Amplifier", 1);
+        config.addDefault("Elytrian Impact Damage Multiplier", 1.5);
         config.options().copyDefaults(true);
         instance.saveConfig();
     }
+
     public void loadConfig() {
         jdbcURL = config.getString("JDBC URL");
-        bedrockPrefix = config.getString("Bedrock Prefix",".");
-        msgPrefix = config.getString("Message Prefix","&b[&cFragalicious Origins&b]&r");
-        phantomGhostmodeCooldown = config.getInt("Phantom Ghostmode Cooldown",60);
-        phantomGhostModeDuration = config.getInt("Phantom Ghostmode Duration",15);
-        phantomGhostmodeSpeed = config.getDouble("Phantom Ghostmode Speed",0.05);
-        phantomHealth = config.getInt("Phantom Health",16);
-        phantomLightExposuretime = config.getInt("Phantom Light Exposure Time",10);
-        phantomFireResistDamageChance = config.getInt("Phantom Fire Resist Damage Chance",20);
-        felineJumpMultiplier = config.getDouble("Feline Jump Multiplier",3.1);
-        felineSpeed = config.getDouble("Feline Speed",0.4);
-        felinePounceCooldown = config.getInt("Feline Pounce Cooldown",40);
-        enderianMaxHealth = config.getInt("Enderian Max Health",24);
-        enderianTeleportCooldown = config.getInt("Enderian Teleport Cooldown",10);
-        enderianTeleportDistance = config.getInt("Enderian Teleport Distance",15);
-        enderianDamageTeleportAttempts = config.getInt("Enderian Damage Teleport Attempts",20);
-        enderianDamageTeleportRange = config.getInt("Enderian Damage Teleport Range",15);
-        shulkArmor = config.getDouble("Shulk Armor",10.0);
-        shulkKnockback = config.getDouble("Shulk Knockback",0.5);
-        shulkToughness = config.getDouble("Shulk Toughness",4.0);
-        shulkSpeed = config.getDouble("Shulk Speed",0.18);
-        shulkFoodLossChance = config.getDouble("Shulk Food Loss Chance",0.2);
-        shulkSelfLevitationChance = config.getDouble("Shulk Self Levitation Chance",0.2);
-        shulkTargetLevitationChance = config.getDouble("Shulk Other Levitation Chance",0.1);
-        chickenSpeed = config.getDouble("Chicken Speed",0.35);
-        chickenHungerCancel = config.getDouble("Chicken Hunger Cancel Chance",0.2);
-        chickenSpawnBirdCooldown = config.getInt("Chicken Spawn Bird Cooldown",180);
+        bedrockPrefix = config.getString("Bedrock Prefix", ".");
+        msgPrefix = config.getString("Message Prefix", "&b[&cFragalicious Origins&b]&r");
+        phantomGhostmodeCooldown = config.getInt("Phantom Ghostmode Cooldown", 60);
+        phantomGhostModeDuration = config.getInt("Phantom Ghostmode Duration", 15);
+        phantomGhostmodeSpeed = config.getDouble("Phantom Ghostmode Speed", 0.05);
+        phantomHealth = config.getInt("Phantom Health", 16);
+        phantomLightExposuretime = config.getInt("Phantom Light Exposure Time", 10);
+        phantomFireResistDamageChance = config.getInt("Phantom Fire Resist Damage Chance", 20);
+        felineJumpMultiplier = config.getDouble("Feline Jump Multiplier", 3.1);
+        felineSpeed = config.getDouble("Feline Speed", 0.4);
+        felinePounceCooldown = config.getInt("Feline Pounce Cooldown", 40);
+        enderianMaxHealth = config.getInt("Enderian Max Health", 24);
+        enderianTeleportCooldown = config.getInt("Enderian Teleport Cooldown", 10);
+        enderianTeleportDistance = config.getInt("Enderian Teleport Distance", 15);
+        enderianDamageTeleportAttempts = config.getInt("Enderian Damage Teleport Attempts", 20);
+        enderianDamageTeleportRange = config.getInt("Enderian Damage Teleport Range", 15);
+        shulkArmor = config.getDouble("Shulk Armor", 10.0);
+        shulkKnockback = config.getDouble("Shulk Knockback", 0.5);
+        shulkToughness = config.getDouble("Shulk Toughness", 4.0);
+        shulkSpeed = config.getDouble("Shulk Speed", 0.18);
+        shulkFoodLossChance = config.getDouble("Shulk Food Loss Chance", 0.2);
+        shulkSelfLevitationChance = config.getDouble("Shulk Self Levitation Chance", 0.2);
+        shulkTargetLevitationChance = config.getDouble("Shulk Other Levitation Chance", 0.1);
+        chickenSpeed = config.getDouble("Chicken Speed", 0.35);
+        chickenHungerCancel = config.getDouble("Chicken Hunger Cancel Chance", 0.2);
+        chickenSpawnBirdCooldown = config.getInt("Chicken Spawn Bird Cooldown", 180);
         blazeHeat1 = config.getString("Blazeborn Heat 1", "100,1,5,5,false,true");
         blazeHeat2 = config.getString("Blazeborn Heat 2", "500,10,25,25,false,true");
         blazeHeat3 = config.getString("Blazeborn Heat 3", "1000,25,50,75,false,false");
@@ -154,26 +170,38 @@ public class ConfigHandler {
         blazeAbility3 = config.getString("Blazeborn Ability 3", "true,120,100,1,1");
         blazeAbility4 = config.getString("Blazeborn Ability 4", "true,90,150,2,2");
         blazeAbility5 = config.getString("Blazeborn Ability 5", "true,60,300,3,3");
-        blazeOnFire = config.getInt("Blazeborn On Fire Boost",10);
-        blazeStartingHeat = config.getInt("Starting Heat",100);
+        blazeOnFire = config.getInt("Blazeborn On Fire Boost", 10);
+        blazeStartingHeat = config.getInt("Starting Heat", 100);
         blazeFoodBlazePowder = config.getString("Blazeborn Food Blaze Powder", "3,250");
-        blazeFoodBlazeRod =config.getString("Blazeborn Food Blaze Rod", "3,100");
+        blazeFoodBlazeRod = config.getString("Blazeborn Food Blaze Rod", "3,100");
         blazeFoodCoal = config.getString("Blazeborn Food Coal", "4,250");
         blazeFoodCoalBlock = config.getString("Blazeborn Food Coal Block", "4,1000");
         blazeFoodCharcoal = config.getString("Blazeborn Food Charcoal", "3,50");
         blazeFoodFireCharge = config.getString("Blazeborn Food Fire Charge", "5,500");
-        merlingBreathInSeconds =  config.getInt("Merling Breath In Seconds", 30);
-        merlingConduitPowerAmplifier =  config.getInt("Merling Conduit Power Amplifier", 2);
+        merlingBreathInSeconds = config.getInt("Merling Breath In Seconds", 30);
+        merlingConduitPowerAmplifier = config.getInt("Merling Conduit Power Amplifier", 2);
         merlingVelocityMultiplier = config.getDouble("Merling Velocity Multiplier", 2.0);
-        merlingTridentDamageMultiplier =  config.getDouble("Merling Trident Multiplier", 1.5);
+        merlingTridentDamageMultiplier = config.getDouble("Merling Trident Multiplier", 1.5);
         merlingTridentBreakDamage = config.getInt("Merling Trident Death Damage", 83);
-        arachnidVelocity = config.getDouble("Arachnid Velocity",0.25);
-        arachnidSpiderSenseRange = config.getInt("Arachnid Spider Sense Range",15);
-        arachnidSpiderSenseDuraion = config.getInt("Arachnid Spider Sense Duration in Seconds",10);
+        arachnidVelocity = config.getDouble("Arachnid Velocity", 0.25);
+        arachnidSpiderSenseRange = config.getInt("Arachnid Spider Sense Range", 15);
+        arachnidSpiderSenseDuraion = config.getInt("Arachnid Spider Sense Duration in Seconds", 10);
         arachnidSpiderSenseCooldown = config.getInt("Arachnid Spider Sense Cooldown in Seconds", 60);
-        arachnidWebDuration = config.getInt("Arachnid Web Duration in Ticks",20);
-        arachnidWebChance = config.getDouble("Arachnid Web Chance",0.1);
-        arachnidWebAmplifier = config.getInt("Arachnid Web Amplifier",2);
+        arachnidWebDuration = config.getInt("Arachnid Web Duration in Ticks", 20);
+        arachnidWebChance = config.getDouble("Arachnid Web Chance", 0.1);
+        arachnidWebAmplifier = config.getInt("Arachnid Web Amplifier", 2);
+        elytrianArmorSpeedModifer = config.getDouble("Elytrian Armor Speed Modifier", 0.008);
+        elytrianAttackSpeedModifer = config.getDouble("Elytrian Attack Speed Modifier", 2.5);
+        elytrianAirCurrentChance = config.getDouble("Elytrian Air Current Chance", 0.01);
+        elytrianAirCurrentMultiplier = config.getDouble("Elytrian Air Current Multiplier", 2.5);
+        elytrianAirCurrentHeight = config.getInt("Elytrian Air Current Height", 120);
+        elytrianFlyingVelocityAbilityMultiplier = config.getDouble("Elytrian Flying Velocity Ability Multiplier", 3.0);
+        elytrianGroundVerticalVelocityAbilityMultiplier = config.getDouble("Elytrian Ground Vertical Velocity Ability", 2.5);
+        elytrianCooldown = config.getInt("Elytrian Cooldown", 30);
+        elytrianCeilingLimit = config.getInt("Elytrian Ceiling Limit", 6);
+        elytrianCeilingSlownessAmplifier = config.getInt("Elytrian Ceiling Slowness Amplifier", 1);
+        elytrianImpactDamageMultiplier = config.getDouble("Elytrian Impact Damage Multiplier", 1.5);
+
     }
 
     public static String getJdbcURL() {
@@ -255,6 +283,7 @@ public class ConfigHandler {
     public static double getShulkKnockback() {
         return shulkKnockback;
     }
+
     public static double getShulkSpeed() {
         return shulkSpeed;
     }
@@ -422,5 +451,49 @@ public class ConfigHandler {
 
     public static int getArachnidWebAmplifier() {
         return arachnidWebAmplifier;
+    }
+
+    public static double getElytrianArmorSpeedModifer() {
+        return elytrianArmorSpeedModifer;
+    }
+
+    public static double getElytrianAttackSpeedModifer() {
+        return elytrianAttackSpeedModifer;
+    }
+
+    public static double getElytrianAirCurrentChance() {
+        return elytrianAirCurrentChance;
+    }
+
+    public static double getElytrianAirCurrentMultiplier() {
+        return elytrianAirCurrentMultiplier;
+    }
+
+    public static double getElytrianFlyingVelocityAbilityMultiplier() {
+        return elytrianFlyingVelocityAbilityMultiplier;
+    }
+
+    public static double getElytrianGroundVerticalVelocityAbilityMultiplier() {
+        return elytrianGroundVerticalVelocityAbilityMultiplier;
+    }
+
+    public static double getElytrianImpactDamageMultiplier() {
+        return elytrianImpactDamageMultiplier;
+    }
+
+    public static int getElytrianCooldown() {
+        return elytrianCooldown;
+    }
+
+    public static int getElytrianCeilingLimit() {
+        return elytrianCeilingLimit;
+    }
+
+    public static int getElytrianCeilingSlownessAmplifier() {
+        return elytrianCeilingSlownessAmplifier;
+    }
+
+    public static int getElytrianAirCurrentHeight() {
+        return elytrianAirCurrentHeight;
     }
 }

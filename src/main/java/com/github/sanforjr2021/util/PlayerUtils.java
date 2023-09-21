@@ -100,6 +100,17 @@ public class PlayerUtils {
         player.setFoodLevel(food);
     }
 
+    public static void setAttackSpeed(Player player, float attackspeed){
+        AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
+        attributeInstance.setBaseValue(attackspeed);
+        player.updateInventory();
+    }
+    public static void resetAttackSpeed(Player player){
+        AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
+        attributeInstance.setBaseValue(attributeInstance.getDefaultValue());
+        player.updateInventory();
+    }
+
     public static void addEffect(Player player, PotionEffectType effectType, int amplifier, int duration){
         player.addPotionEffect(new PotionEffect(effectType,duration , amplifier, false, false, false));
     }
@@ -151,6 +162,11 @@ public class PlayerUtils {
             }
         }
         return false;
+    }
+    public static boolean isOnGround(Player player){
+        Location location = player.getLocation();
+        Location belowPlayer = new Location(player.getWorld(), location.getX(),location.getY()-1, location.getZ());
+        return belowPlayer.getBlock().isSolid();
     }
     public static void resetSleep(Player player){
         player.setStatistic(Statistic.TIME_SINCE_REST, 0);

@@ -5,11 +5,12 @@ import com.github.sanforjr2021.ability.arachnid.ClimbAbility;
 import com.github.sanforjr2021.ability.arachnid.SpiderSensesAbility;
 import com.github.sanforjr2021.ability.arachnid.ToggleClimbAbility;
 import com.github.sanforjr2021.ability.arachnid.WebbedAbility;
+import com.github.sanforjr2021.ability.blazeborn.*;
 import com.github.sanforjr2021.ability.chicken.CliffSleepAbility;
 import com.github.sanforjr2021.ability.chicken.ReducedHungerAbility;
 import com.github.sanforjr2021.ability.chicken.SlowfallAbility;
 import com.github.sanforjr2021.ability.chicken.SpawnBirdAbility;
-import com.github.sanforjr2021.ability.blazeborn.*;
+import com.github.sanforjr2021.ability.elytrian.*;
 import com.github.sanforjr2021.ability.enderian.*;
 import com.github.sanforjr2021.ability.feline.*;
 import com.github.sanforjr2021.ability.merling.*;
@@ -20,7 +21,6 @@ import com.github.sanforjr2021.ability.shulker.LevitateEnemyAbility;
 import com.github.sanforjr2021.ability.shulker.LevitateOnDamageAbility;
 import com.github.sanforjr2021.ability.shulker.ShulkInventoryAbility;
 import com.github.sanforjr2021.ability.shulker.ToggleLevitationAbility;
-import com.github.sanforjr2021.origins.PlayerManager;
 import com.github.sanforjr2021.data.jdbc.PlayerOriginDAO;
 import com.github.sanforjr2021.origins.*;
 import com.github.sanforjr2021.util.MessageUtil;
@@ -31,12 +31,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.SQLException;
@@ -70,8 +66,8 @@ public class AbilityListener implements Listener {
                         default:
                             break;
                     }
-                    if(counter == 4){
-                        switch (playerOrigin.getValue().getOriginType()){
+                    if (counter == 4) {
+                        switch (playerOrigin.getValue().getOriginType()) {
                             case BLAZEBORN:
                                 new HeatAbility((Blazeborn) playerOrigin.getValue());
                                 break;
@@ -81,14 +77,23 @@ public class AbilityListener implements Listener {
                         }
                     }
                 }
-                if(counter == 4){
+                if (counter == 4) {
                     counter = 1;
-                }else{
+                } else {
                     counter++;
                 }
             }
         }.runTaskTimer(getInstance(), 20, 5);
     }
+
+    @EventHandler
+    public void onPlayerFlight(PlayerToggleFlightEvent e) {
+        Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
+        if (origin.getOriginType() == OriginType.ELYTRIAN) {
+            new SpreadWingsAbility(e);
+        }
+    }
+
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
@@ -110,9 +115,8 @@ public class AbilityListener implements Listener {
             case MERLING:
                 new SpeedSwimAbility(e);
                 break;
-            case UNASSIGNED:
-                MessageUtil.sendMessage("You must select an origin first before you can continue", e.getPlayer());
-                e.setCancelled(true);
+            case ELYTRIAN:
+                new ElytrianMovementAbility(e);
                 break;
         }
     }
@@ -131,9 +135,10 @@ public class AbilityListener implements Listener {
                 break;
         }
     }
+
     @EventHandler
-    public void onFoodLevelChange(FoodLevelChangeEvent e){
-        if(e.getEntity() instanceof Player){
+    public void onFoodLevelChange(FoodLevelChangeEvent e) {
+        if (e.getEntity() instanceof Player) {
             Origin origin = PlayerManager.getOrigin(e.getEntity().getUniqueId());
             switch (origin.getOriginType()) {
                 case CHICKEN:
@@ -146,6 +151,7 @@ public class AbilityListener implements Listener {
         }
 
     }
+
     @EventHandler
     public void onLeaveBed(PlayerBedLeaveEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
@@ -197,7 +203,7 @@ public class AbilityListener implements Listener {
                 MessageUtil.sendMessage("&eWelcome back! You may select an origin by typing &c/origin choose <Origintype>", player);
                 PlayerManager.setOrigin(player.getUniqueId(), new Unassigned(player));
             }
-        }else{
+        } else {
             MessageUtil.sendMessage("&eYou may select an origin by typing &c/origin choose <Origintype>", player);
             PlayerManager.setOrigin(player.getUniqueId(), new Unassigned(player));
         }
@@ -208,11 +214,13 @@ public class AbilityListener implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         PlayerManager.remove(e.getPlayer().getUniqueId());
     }
+
     @EventHandler
-    public void onRespawn(PlayerRespawnEvent e){
+    public void onRespawn(PlayerRespawnEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-            origin.onDeath();
+        origin.onDeath();
     }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onTeleport(PlayerTeleportEvent e) {
         //cancel phantom spectator events
@@ -225,6 +233,16 @@ public class AbilityListener implements Listener {
                 break;
             case ENDERIAN:
                 new TeleportDamageImmunity(e);
+        }
+    }
+
+    @EventHandler
+    public void onGlideToggle(EntityToggleGlideEvent e) {
+        if (e.getEntity() instanceof Player) {
+            Origin origin = PlayerManager.getOrigin(e.getEntity().getUniqueId());
+            if (origin.getOriginType() == OriginType.ELYTRIAN) {
+                new SpreadWingsAbility(e);
+            }
         }
     }
 
@@ -244,6 +262,8 @@ public class AbilityListener implements Listener {
                     break;
                 case BLAZEBORN:
                     new HeatLossOnDamageAbility(e);
+                case ELYTRIAN:
+                    new ImpactAbility(e);
                 default:
                     break;
             }
@@ -259,7 +279,7 @@ public class AbilityListener implements Listener {
         if (e.getDamager() instanceof Player) {
             Player player = (Player) e.getDamager();
             Origin origin = PlayerManager.getOrigin(player.getUniqueId());
-            switch (origin.getOriginType()){
+            switch (origin.getOriginType()) {
                 case SHULK:
                     new LevitateEnemyAbility(e);
                     break;
@@ -273,8 +293,7 @@ public class AbilityListener implements Listener {
                     new WebbedAbility(e);
                     break;
             }
-        }
-        if(e.getDamager() instanceof Trident){
+        } else if (e.getDamager() instanceof Trident) {
             new ThrownTridentAmplifierAbility(e);
         }
     }
@@ -318,31 +337,6 @@ public class AbilityListener implements Listener {
     ///////////////////////////////////////////////////////////////
     //                    Utility Methods                       //
     //////////////////////////////////////////////////////////////
-    public static void reload() {
-        GhostAbility.reload();
-        ShadowSkinAbility.reload();
-        NocturnalSleepAbility.reload();
-        LeapAbility.reload();
-        PounceAbility.reload();
-        TeleportAbility.reload();
-        TeleportOnDamageAbility.reload();
-        LevitateEnemyAbility.reload();
-        LevitateOnDamageAbility.reload();
-        ReducedHungerAbility.reload();
-        SpawnBirdAbility.reload();
-        HeatLossOnDamageAbility.reload();
-        HeatAbility.reload();
-        TridentTotemAbility.reload();
-        SpeedSwimAbility.reload();
-        MerlingPassiveAbility.reload();
-        MerlingWaterDrink.reload();
-        TridentAmplifierAbility.reload();
-        ThrownTridentAmplifierAbility.reload();
-        WebbedAbility.reload();
-        ClimbAbility.reload();
-        SpiderSensesAbility.reload();
-    }
-
     public static void primaryAbility(Origin origin) {
         switch (origin.getOriginType()) {
             case PHANTOM:
@@ -367,7 +361,10 @@ public class AbilityListener implements Listener {
                 new ToggleSpeedSwimAbility((Merling) origin);
                 break;
             case ARACHNID:
-                new SpiderSensesAbility( (Arachnid) origin);
+                new SpiderSensesAbility((Arachnid) origin);
+                break;
+            case ELYTRIAN:
+                new BoostAbility((Elytrian) origin);
                 break;
         }
     }
@@ -386,6 +383,39 @@ public class AbilityListener implements Listener {
             case ARACHNID:
                 new ToggleClimbAbility((Arachnid) origin);
                 break;
+            case ELYTRIAN:
+                new ToggleWingsAbility((Elytrian) origin);
+                break;
         }
     }
+
+    public static void reload() {
+        GhostAbility.reload();
+        ShadowSkinAbility.reload();
+        NocturnalSleepAbility.reload();
+        LeapAbility.reload();
+        PounceAbility.reload();
+        TeleportAbility.reload();
+        TeleportOnDamageAbility.reload();
+        LevitateEnemyAbility.reload();
+        LevitateOnDamageAbility.reload();
+        ReducedHungerAbility.reload();
+        SpawnBirdAbility.reload();
+        HeatLossOnDamageAbility.reload();
+        HeatAbility.reload();
+        TridentTotemAbility.reload();
+        SpeedSwimAbility.reload();
+        MerlingPassiveAbility.reload();
+        MerlingWaterDrink.reload();
+        TridentAmplifierAbility.reload();
+        ThrownTridentAmplifierAbility.reload();
+        WebbedAbility.reload();
+        ClimbAbility.reload();
+        SpiderSensesAbility.reload();
+        BoostAbility.reload();
+        ElytrianMovementAbility.reload();
+        ImpactAbility.reload();
+    }
+
+
 }

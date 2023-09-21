@@ -38,6 +38,8 @@ public enum OriginType {
                 return new Merling(player);
             case ARACHNID:
                 return new Arachnid(player);
+            case ELYTRIAN:
+                return new Elytrian(player);
             default:
                 return new Unassigned(player);
         }

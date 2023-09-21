@@ -31,6 +31,9 @@ public abstract class Origin {
         PlayerUtils.resetMaxHealth(player);
         PlayerUtils.resetToughness(player);
         PlayerUtils.resetKnockbackResistance(player);
+        PlayerUtils.resetAttackSpeed(player);
+        player.setAllowFlight(true);
+        player.setFlying(false);
         OriginBossBarManager.removeBossBars(player.getUniqueId());
         MessageUtil.sendMessage("&eYou are no longer the origin &b" + originType, player);
     }
