@@ -3,6 +3,7 @@ package com.github.sanforjr2021.origins;
 import com.github.sanforjr2021.util.MessageUtil;
 import com.github.sanforjr2021.util.PlayerUtils;
 import com.github.sanforjr2021.util.bossBar.OriginBossBarManager;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -17,7 +18,9 @@ public abstract class Origin {
         originType = origin;
         uuid = player.getUniqueId();
         MessageUtil.log(player.getName() + " is playing as " + origin);
-        MessageUtil.sendMessage("&eYou are playing as a &c" + origin, player);
+        if(origin != OriginType.UNASSIGNED){
+            MessageUtil.sendMessage("&eYou are playing as a &c" + origin, player);
+        }
         onLogin();
     }
     public abstract void onLogin();
@@ -32,10 +35,16 @@ public abstract class Origin {
         PlayerUtils.resetToughness(player);
         PlayerUtils.resetKnockbackResistance(player);
         PlayerUtils.resetAttackSpeed(player);
-        player.setAllowFlight(true);
-        player.setFlying(false);
+        PlayerUtils.resetLuck(player);
+        if(player.getGameMode() == GameMode.SURVIVAL){
+            player.setAllowFlight(false);
+            player.setFlying(false);
+        }
         OriginBossBarManager.removeBossBars(player.getUniqueId());
-        MessageUtil.sendMessage("&eYou are no longer the origin &b" + originType, player);
+        if(originType != OriginType.UNASSIGNED){
+            MessageUtil.sendMessage("&eYou are no longer the origin &b" + originType, player);
+        }
+
     }
     public OriginType getOriginType() {
         return originType;

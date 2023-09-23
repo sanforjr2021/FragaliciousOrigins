@@ -14,7 +14,7 @@ public class CliffSleepAbility extends Ability {
         Location location = e.getBed().getLocation();
         if (location.getY() < 100) {
             e.setUseBed(Event.Result.DENY);
-            MessageUtil.sendMessage("&cYou need to sleep in a higher location", player);
+            MessageUtil.sendMessage("&cYour bed must be at least Y 100 or higher to sleep", player);
         }
     }
 }

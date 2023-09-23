@@ -6,6 +6,7 @@ import com.github.sanforjr2021.util.ConfigHandler;
 import com.github.sanforjr2021.util.PlayerUtils;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
@@ -24,7 +25,13 @@ public class HeatAbility extends Ability {
             drain = drain - heatLevel.getPassiveDrain();
             if (PlayerUtils.isWetIgnoringConduit(player) && !player.hasPotionEffect(PotionEffectType.CONDUIT_POWER)) {
                 drain = drain - heatLevel.getWaterDrain();
+                player.playSound(player, Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 1.0f, 1.0f);
             }
+        }
+        //add regen
+        if(heatLevel.canRegen() && player.getSaturation() < 3.3f * ((float) heatLevel.getLevel())){
+            player.setSaturation(player.getSaturation() + 1.0f + 0.8f * ((float)heatLevel.getLevel()));
+            drain = drain-(heatLevel.getPassiveDrain()*heatLevel.getLevel());
         }
         //player particle effect
         switch (heatLevel) {

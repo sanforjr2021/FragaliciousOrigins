@@ -13,8 +13,8 @@ public class ReducedHungerAbility extends Ability {
         if (player.getFoodLevel() > e.getFoodLevel()) { //hunger went down
             if (Math.random() < HUNGER_CANCEL_CHANCE) {
                 e.setCancelled(true);
+                player.setSaturation(player.getSaturation() + 2.0f);
             }
-        } else {
         }
     }
 

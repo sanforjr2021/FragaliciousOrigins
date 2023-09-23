@@ -22,13 +22,18 @@ public class PounceAbility extends Ability {
             Vector lookDirection = player.getEyeLocation().getDirection();
             if(player.getLocation().getPitch() < -5){
                 player.setVelocity(lookDirection.multiply(2.5));
-                PlayerUtils.addEffect(player, PotionEffectType.INCREASE_DAMAGE, 2, 50);
+                PlayerUtils.addEffect(player, PotionEffectType.INCREASE_DAMAGE, 2, 60);
                 origin.setPounceCooldown(POUNCE_COOLDOWN);
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        origin.setPounceCooldown(origin.getPounceCooldown()-1);
-                        if(origin.getPounceCooldown() <= 0){
+                        try{
+                            origin.setPounceCooldown(origin.getPounceCooldown()-1);
+                            if(origin.getPounceCooldown() <= 0){
+                                cancel();
+                            }
+                        }catch (Exception e){
+                            origin.setPounceCooldown(0);
                             cancel();
                         }
                     }

@@ -1,6 +1,7 @@
 package com.github.sanforjr2021.origins;
 
 import com.github.sanforjr2021.FragaliciousOrigins;
+import com.github.sanforjr2021.data.jdbc.BlazeHeatDao;
 import com.github.sanforjr2021.data.jdbc.PlayerOriginDAO;
 import com.github.sanforjr2021.util.MessageUtil;
 import com.github.sanforjr2021.util.bossBar.OriginBossBarManager;
@@ -38,7 +39,14 @@ public class PlayerManager {
 
     public static void remove(UUID uuid) {
         if (contains(uuid)) {
-            PlayerOriginDAO.write(uuid, PlayerManager.getOrigin(uuid).getOriginType());
+            Origin origin = PlayerManager.getOrigin(uuid);
+            PlayerOriginDAO.write(uuid, origin.getOriginType());
+            switch (origin.getOriginType()){
+                case BLAZEBORN:
+                    Blazeborn blazeborn = (Blazeborn) origin;
+                    BlazeHeatDao.write(uuid, blazeborn.getHeat());
+                    break;
+            }
             playerMap.remove(uuid);
             OriginBossBarManager.removeBossBars(uuid);
         }

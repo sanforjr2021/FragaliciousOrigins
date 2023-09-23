@@ -21,6 +21,7 @@ import com.github.sanforjr2021.ability.shulker.LevitateEnemyAbility;
 import com.github.sanforjr2021.ability.shulker.LevitateOnDamageAbility;
 import com.github.sanforjr2021.ability.shulker.ShulkInventoryAbility;
 import com.github.sanforjr2021.ability.shulker.ToggleLevitationAbility;
+import com.github.sanforjr2021.data.jdbc.BlazeHeatDao;
 import com.github.sanforjr2021.data.jdbc.PlayerOriginDAO;
 import com.github.sanforjr2021.origins.*;
 import com.github.sanforjr2021.util.MessageUtil;
@@ -221,7 +222,7 @@ public class AbilityListener implements Listener {
         origin.onDeath();
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onTeleport(PlayerTeleportEvent e) {
         //cancel phantom spectator events
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
@@ -262,8 +263,10 @@ public class AbilityListener implements Listener {
                     break;
                 case BLAZEBORN:
                     new HeatLossOnDamageAbility(e);
+                    break;
                 case ELYTRIAN:
                     new ImpactAbility(e);
+                    break;
                 default:
                     break;
             }

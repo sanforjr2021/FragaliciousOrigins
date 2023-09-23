@@ -27,7 +27,7 @@ public class ConfigHandler {
     private static double merlingVelocityMultiplier, merlingTridentDamageMultiplier;
     private static double arachnidVelocity, arachnidWebChance;
     private static int arachnidSpiderSenseRange, arachnidSpiderSenseDuraion, arachnidSpiderSenseCooldown, arachnidWebDuration, arachnidWebAmplifier;
-    private static double elytrianArmorSpeedModifer, elytrianAttackSpeedModifer, elytrianAirCurrentChance, elytrianAirCurrentMultiplier, elytrianFlyingVelocityAbilityMultiplier, elytrianGroundVerticalVelocityAbilityMultiplier, elytrianImpactDamageMultiplier;
+    private static double elytrianArmorSpeedModifer, elytrianAttackSpeedModifer, elytrianAirCurrentChance, elytrianAirCurrentMultiplier, elytrianFlyingVelocityAbilityMultiplier, elytrianGroundVerticalVelocityAbilityMultiplier, elytrianImpactDamageMultiplier, elytrianMinBoostSpeed;
     private static int elytrianCooldown, elytrianCeilingLimit, elytrianCeilingSlownessAmplifier, elytrianAirCurrentHeight;
 
     public ConfigHandler(FragaliciousOrigins instance) {
@@ -93,8 +93,8 @@ public class ConfigHandler {
         config.addDefault("Starting Heat", 100);
         config.addDefault("Blazeborn Food Blaze Powder", "3,250");
         config.addDefault("Blazeborn Food Blaze Rod", "3,100");
-        config.addDefault("Blazeborn Food Coal", "4,250");
-        config.addDefault("Blazeborn Food Coal Block", "4,1000");
+        config.addDefault("Blazeborn Food Coal", "5,250");
+        config.addDefault("Blazeborn Food Coal Block", "5,1000");
         config.addDefault("Blazeborn Food Charcoal", "3,50");
         config.addDefault("Blazeborn Food Fire Charge", "5,500");
         config.addDefault("#####################Merling Settings#####################", "");
@@ -123,6 +123,7 @@ public class ConfigHandler {
         config.addDefault("Elytrian Ceiling Limit", 6);
         config.addDefault("Elytrian Ceiling Slowness Amplifier", 1);
         config.addDefault("Elytrian Impact Damage Multiplier", 1.5);
+        config.addDefault("Elytrian Boost Min Speed", 5.0);
         config.options().copyDefaults(true);
         instance.saveConfig();
     }
@@ -201,7 +202,7 @@ public class ConfigHandler {
         elytrianCeilingLimit = config.getInt("Elytrian Ceiling Limit", 6);
         elytrianCeilingSlownessAmplifier = config.getInt("Elytrian Ceiling Slowness Amplifier", 1);
         elytrianImpactDamageMultiplier = config.getDouble("Elytrian Impact Damage Multiplier", 1.5);
-
+        elytrianMinBoostSpeed = config.getDouble("Elytrian Boost Min Speed", 5.0);
     }
 
     public static String getJdbcURL() {
@@ -496,4 +497,9 @@ public class ConfigHandler {
     public static int getElytrianAirCurrentHeight() {
         return elytrianAirCurrentHeight;
     }
+
+    public static double getElytrianMinBoostSpeed() {
+        return elytrianMinBoostSpeed;
+    }
 }
+

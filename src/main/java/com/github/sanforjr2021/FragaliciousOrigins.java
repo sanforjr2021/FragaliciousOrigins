@@ -41,7 +41,6 @@ public class FragaliciousOrigins extends JavaPlugin {
     public void onDisable() {
         log("is beginning shutdown process");
         PlayerOriginDAO.write(playerManager.getPlayerMap());
-        OriginBossBarManager.removeAllBossBars();
         log("is Shut Down");
         //save JDBC info
     }

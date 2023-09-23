@@ -31,7 +31,6 @@ public class PlayerUtils {
     public static void setMaxHealth(Player player, double maxHealth) {
         AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         attributeInstance.setBaseValue(maxHealth);
-
     }
 
     public static void resetMaxHealth(Player player) {
@@ -39,6 +38,15 @@ public class PlayerUtils {
         attributeInstance.setBaseValue(20.0D);
     }
 
+    public static void setLuck(Player player, double luck) {
+        AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_LUCK);
+        attributeInstance.setBaseValue(luck);
+    }
+
+    public static void resetLuck(Player player) {
+        AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_LUCK);
+        attributeInstance.setBaseValue(0.0);
+    }
     public static void setArmor(Player player, double armor) {
         AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_ARMOR);
         attributeInstance.setBaseValue(attributeInstance.getDefaultValue() + armor);

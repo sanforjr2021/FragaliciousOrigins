@@ -12,9 +12,8 @@ public class SpeedSwimAbility extends Ability {
     public SpeedSwimAbility(PlayerMoveEvent e) {
         Player player = e.getPlayer();
         Merling merling = (Merling) PlayerManager.getOrigin(player.getUniqueId());
-        if(merling.hasSwimModifier() && player.isInWater()){
+        if(merling.hasSwimModifier() && player.isInWater() && player.isSwimming()){
             player.setVelocity(player.getLocation().getDirection().multiply(VELOCITY_MULTIPLIER));
-
         }
     }
 

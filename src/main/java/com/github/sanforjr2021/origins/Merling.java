@@ -1,6 +1,7 @@
 package com.github.sanforjr2021.origins;
 
 import com.github.sanforjr2021.util.ConfigHandler;
+import com.github.sanforjr2021.util.PlayerUtils;
 import com.github.sanforjr2021.util.bossBar.BossBarType;
 import com.github.sanforjr2021.util.bossBar.OriginBossBarManager;
 import org.bukkit.Material;
@@ -14,7 +15,7 @@ public class Merling extends Origin{
         super(OriginType.MERLING, player);
         swimModifier = false;
         breathTime = MAX_BREATH;
-
+        PlayerUtils.setLuck(player,2.0);
     }
 
     @Override

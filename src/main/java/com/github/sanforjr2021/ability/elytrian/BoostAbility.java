@@ -13,7 +13,7 @@ import org.bukkit.util.Vector;
 
 public class BoostAbility extends Ability {
     private static int COOLDOWN_MAX;
-    private static double GLIDE_BOOST,GROUND_BOOST;
+    private static double GLIDE_BOOST,GROUND_BOOST, MIN_BOOST_SPEED;
 
     public BoostAbility(Elytrian elytrian) {
         Player player = elytrian.getPlayer();
@@ -21,10 +21,7 @@ public class BoostAbility extends Ability {
             sendCooldownMessage("Boost",elytrian.getCooldown(),player);
             return;
         }else if(player.isGliding()){ //while flying
-            Vector velocity = player.getVelocity().multiply(GLIDE_BOOST);
-            if(Math.abs(velocity.getY()) > 20.0 || Math.abs(velocity.getX()) > 20.0 || Math.abs(velocity.getZ()) > 20.0){
-                velocity = velocity.multiply(GLIDE_BOOST);
-            }
+            Vector velocity = setMinVelocity(player);
             player.setVelocity(velocity);
             PlayerUtils.generateParticle(player, Particle.CLOUD, 50);
             PlayerUtils.generateParticle(player,Particle.SMOKE_NORMAL,20);
@@ -60,15 +57,17 @@ public class BoostAbility extends Ability {
         COOLDOWN_MAX = ConfigHandler.getElytrianCooldown();
         GLIDE_BOOST = ConfigHandler.getElytrianFlyingVelocityAbilityMultiplier();
         GROUND_BOOST = ConfigHandler.getElytrianGroundVerticalVelocityAbilityMultiplier();
+        MIN_BOOST_SPEED = ConfigHandler.getElytrianMinBoostSpeed();
     }
-    private static double setMinFloatTo25(double velocity) {
-        if (velocity < 25 && velocity > -25) {
-            if (velocity > 0) {
-                velocity = 25;
-            } else {
-                velocity = -25;
-            }
+    private static Vector setMinVelocity( Player player) {
+        Vector playerVector = player.getVelocity();
+        double x = playerVector.getX();
+        double y = playerVector.getY();
+        double z = playerVector.getZ();
+        double speed = Math.abs(x) + Math.abs(y) + Math.abs(z);
+        if(speed < MIN_BOOST_SPEED){
+            return player.getEyeLocation().getDirection().multiply(MIN_BOOST_SPEED);
         }
-        return velocity;
+        return player.getEyeLocation().getDirection().multiply(speed * GLIDE_BOOST);
     }
 }

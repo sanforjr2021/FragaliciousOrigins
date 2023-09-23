@@ -15,7 +15,7 @@ public class WaterWeaknessAbility extends Ability {
         Feline feline = (Feline) PlayerManager.getOrigin(player.getUniqueId());
         if(PlayerUtils.isWetIgnoringConduit(player) && !player.hasPotionEffect(PotionEffectType.CONDUIT_POWER) && !feline.isWet()){
             PlayerUtils.addEffect(player, PotionEffectType.WEAKNESS, 1);
-            PlayerUtils.addEffect(player, PotionEffectType.SLOW, 2);
+            PlayerUtils.addEffect(player, PotionEffectType.SLOW, 0);
             feline.setWet(true);
         }else if(((!PlayerUtils.isWet(player)) || player.hasPotionEffect(PotionEffectType.CONDUIT_POWER))  && feline.isWet()){
             PlayerUtils.removeEffect(player, PotionEffectType.WEAKNESS);

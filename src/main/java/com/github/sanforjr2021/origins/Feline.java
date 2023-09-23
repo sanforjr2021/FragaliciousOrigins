@@ -13,6 +13,7 @@ public class Feline extends Origin{
         super(OriginType.FELINE, player);
         pounceCooldown = 0;
         wet = false;
+        PlayerUtils.setLuck(player,1.0);
     /*
     Ability list()
     - Punce (F)
