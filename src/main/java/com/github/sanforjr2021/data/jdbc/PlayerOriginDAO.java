@@ -17,7 +17,7 @@ public class PlayerOriginDAO {
     public static OriginType getOrigin(UUID uuid) throws SQLException { //We do not return UUID as they know the UUID already.
         OriginType type;
         Connection connection = DAOController.openDBConnection();
-        PreparedStatement statement = connection.prepareStatement("SELECT Origin FROM PlayerOrigin WHERE UUID = ?");
+        PreparedStatement statement = connection.prepareStatement("SELECT Origin FROM ORIGINS_PlayerOrigin WHERE UUID = ?");
         statement.setString(1, uuid.toString());
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.next()) {
@@ -33,7 +33,7 @@ public class PlayerOriginDAO {
         int numRowsChanged = 0;
         try {
             Connection connection = DAOController.openDBConnection();
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO PlayerOrigin VALUES ( ?,?) ON DUPLICATE KEY UPDATE Origin = ?;");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO ORIGINS_PlayerOrigin VALUES ( ?,?) ON DUPLICATE KEY UPDATE Origin = ?;");
             statement.setString(1, uuid.toString());
             statement.setString(2, type.toString());
             statement.setString(3, type.toString());
@@ -56,7 +56,7 @@ public class PlayerOriginDAO {
             try {
                 connection.setAutoCommit(false); //Commits are delayed so if there are any issues we don't run into issues and can safely rollback DB
                 for (Map.Entry<UUID, Origin> mapElement : map.entrySet()) {
-                    PreparedStatement statement = connection.prepareStatement("INSERT INTO PlayerOrigin VALUES ( ?,?) ON DUPLICATE KEY UPDATE Origin = ?;");
+                    PreparedStatement statement = connection.prepareStatement("INSERT INTO ORIGINS_PlayerOrigin VALUES ( ?,?) ON DUPLICATE KEY UPDATE Origin = ?;");
                     String origin =  mapElement.getValue().getOriginType().toString();
                     statement.setString(1, mapElement.getKey().toString());
                     statement.setString(2, origin);

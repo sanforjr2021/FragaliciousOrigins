@@ -21,10 +21,13 @@ import com.github.sanforjr2021.ability.shulker.LevitateEnemyAbility;
 import com.github.sanforjr2021.ability.shulker.LevitateOnDamageAbility;
 import com.github.sanforjr2021.ability.shulker.ShulkInventoryAbility;
 import com.github.sanforjr2021.ability.shulker.ToggleLevitationAbility;
-import com.github.sanforjr2021.data.jdbc.BlazeHeatDao;
 import com.github.sanforjr2021.data.jdbc.PlayerOriginDAO;
 import com.github.sanforjr2021.origins.*;
 import com.github.sanforjr2021.util.MessageUtil;
+import me.rockyhawk.commandpanels.CommandPanels;
+import me.rockyhawk.commandpanels.api.CommandPanelsAPI;
+import me.rockyhawk.commandpanels.api.Panel;
+import me.rockyhawk.commandpanels.openpanelsmanager.PanelPosition;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
@@ -43,6 +46,7 @@ import java.util.UUID;
 import static com.github.sanforjr2021.FragaliciousOrigins.getInstance;
 
 public class AbilityListener implements Listener {
+    private final CommandPanelsAPI api = CommandPanels.getAPI();
     public AbilityListener() {
         reload();
         playerChecker();
@@ -97,28 +101,36 @@ public class AbilityListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
-        Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-        switch (origin.getOriginType()) {
-            case FELINE:
-                new WaterWeaknessAbility(e);
-                new NightVisionAbility(e);
-                break;
-            case ARACHNID:
-                new NightVisionAbility(e);
-                new ClimbAbility(e);
-                break;
-            case ENDERIAN:
-                new VoidEscapeAbility(origin);
-                break;
-            case CHICKEN:
-                new SlowfallAbility(e);
-                break;
-            case MERLING:
-                new SpeedSwimAbility(e);
-                break;
-            case ELYTRIAN:
-                new ElytrianMovementAbility(e);
-                break;
+        try {
+            Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
+            switch (origin.getOriginType()) {
+                case FELINE:
+                    new WaterWeaknessAbility(e);
+                    new NightVisionAbility(e);
+                    break;
+                case ARACHNID:
+                    new NightVisionAbility(e);
+                    new ClimbAbility(e);
+                    break;
+                case ENDERIAN:
+                    new VoidEscapeAbility(origin);
+                    break;
+                case CHICKEN:
+                    new SlowfallAbility(e);
+                    break;
+                case MERLING:
+                    new SpeedSwimAbility(e);
+                    break;
+                case ELYTRIAN:
+                    new ElytrianMovementAbility(e);
+                    break;
+                case UNASSIGNED:
+                    Panel panel = api.getPanel("main");
+                    panel.open(origin.getPlayer(), PanelPosition.Top);
+                    break;
+            }
+        } catch (NullPointerException exception) {
+            PlayerManager.setOrigin(e.getPlayer().getUniqueId(), OriginType.UNASSIGNED.getOrigin(e.getPlayer()));
         }
     }
 
@@ -199,6 +211,9 @@ public class AbilityListener implements Listener {
         if (player.hasPlayedBefore()) {
             try {
                 OriginType originType = PlayerOriginDAO.getOrigin(player.getUniqueId());
+                if (originType == null) {
+                    originType = OriginType.UNASSIGNED;
+                }
                 PlayerManager.setOrigin(player.getUniqueId(), originType.getOrigin(player), true);
             } catch (SQLException ex) {
                 MessageUtil.sendMessage("&eWelcome back! You may select an origin by typing &c/origin choose <Origintype>", player);
@@ -277,7 +292,7 @@ public class AbilityListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onAttackEntity(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player) {
             Player player = (Player) e.getDamager();

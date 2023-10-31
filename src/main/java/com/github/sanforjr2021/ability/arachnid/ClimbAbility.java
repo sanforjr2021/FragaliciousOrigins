@@ -6,6 +6,7 @@ import com.github.sanforjr2021.origins.PlayerManager;
 import com.github.sanforjr2021.util.ConfigHandler;
 import com.github.sanforjr2021.util.MessageUtil;
 import com.github.sanforjr2021.util.PlayerUtils;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
@@ -17,6 +18,9 @@ public class ClimbAbility extends Ability {
 
         Player player = e.getPlayer();
         Arachnid arachnid = (Arachnid) PlayerManager.getOrigin(player.getUniqueId());
+        if(player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR){
+            return;
+        }
         if (arachnid.isClimbActive()) {
             // Check if there are solid blocks in all cardinal directions around the player
             boolean hasWallNorth = player.getLocation().getBlock().getRelative(0, 0, -1).isSolid();
@@ -40,6 +44,8 @@ public class ClimbAbility extends Ability {
                 player.setFlying(false);
                 PlayerUtils.resetFlySpeed(player);
             }
+        }else if(player.isFlying()){
+            player.setFlying(false);
         }
     }
 

@@ -14,7 +14,7 @@ public class ShulkInventoryDAO {
         String shulkData = null;
         try {
             Connection connection = DAOController.openDBConnection();
-            PreparedStatement statement = connection.prepareStatement("SELECT ShulkData FROM ShulkChest WHERE UUID = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT ShulkData FROM ORIGINS_ShulkChest WHERE UUID = ?");
             statement.setString(1, uuid.toString());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -31,7 +31,7 @@ public class ShulkInventoryDAO {
         int numRowsChanged = 0;
         try {
             Connection connection = DAOController.openDBConnection();
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO ShulkChest VALUES (?,?) ON DUPLICATE KEY UPDATE ShulkData = ?;");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO ORIGINS_ShulkChest VALUES (?,?) ON DUPLICATE KEY UPDATE ShulkData = ?;");
             statement.setString(1, uuid.toString());
             statement.setString(2, data);
             statement.setString(3, data);

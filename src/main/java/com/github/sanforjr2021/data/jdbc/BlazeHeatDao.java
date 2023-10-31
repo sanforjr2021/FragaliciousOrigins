@@ -13,7 +13,7 @@ public class BlazeHeatDao {
     int heat = -1;
     try {
         Connection connection = DAOController.openDBConnection();
-        PreparedStatement statement = connection.prepareStatement("SELECT Heat FROM BlazebornHeat WHERE UUID = ?");
+        PreparedStatement statement = connection.prepareStatement("SELECT Heat FROM ORIGINS_BlazebornHeat WHERE UUID = ?");
         statement.setString(1, uuid.toString());
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.next()) {
@@ -30,14 +30,14 @@ public class BlazeHeatDao {
         int numRowsChanged = 0;
         try {
             Connection connection = DAOController.openDBConnection();
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO BlazebornHeat VALUES (?,?) ON DUPLICATE KEY UPDATE Heat = ?;");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO ORIGINS_BlazebornHeat VALUES (?,?) ON DUPLICATE KEY UPDATE Heat = ?;");
             statement.setString(1, uuid.toString());
             statement.setInt(2, heat);
             statement.setInt(3, heat);
             numRowsChanged = statement.executeUpdate();
             connection.close();
         } catch (SQLException throwables) {
-            logError("Error Logging shulkdata into database for UUID" + uuid);
+            logError("Error Logging blazebornheat into database for UUID" + uuid);
             throwables.printStackTrace();
         }
         return numRowsChanged == 1;

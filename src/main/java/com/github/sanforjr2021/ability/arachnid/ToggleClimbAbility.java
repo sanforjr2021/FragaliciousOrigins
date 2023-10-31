@@ -13,6 +13,7 @@ public class ToggleClimbAbility extends Ability {
             MessageUtil.sendMessage("Climbing is now &aEnabled", arachnid.getPlayer());
         }else{
             MessageUtil.sendMessage("Climbing is now &cDisabled", arachnid.getPlayer());
+            arachnid.getPlayer().setAllowFlight(false);
         }
     }
 }

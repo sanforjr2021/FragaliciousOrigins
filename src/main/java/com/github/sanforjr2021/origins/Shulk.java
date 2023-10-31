@@ -14,7 +14,7 @@ public class Shulk extends Origin{
         PlayerUtils.setArmor(player,ARMOR);
         PlayerUtils.setToughness(player,TOUGHNESS);
         PlayerUtils.setWalkSpeed(player, SPEED);
-        levitationActive = true;
+        levitationActive = false;
     }
 
     @Override

@@ -48,18 +48,17 @@ public class OriginCommandListener implements TabExecutor {
                     try {
                         OriginType originType = OriginType.valueOf(strings[1].toUpperCase());
                         Player player = ((Player) commandSender).getPlayer();
-                        /*
-                        if(PlayerManager.getOrigin(player.getUniqueId()) == null || PlayerManager.getOrigin(player.getUniqueId()).getOriginType() == OriginType.UNASSIGNED){
-                            PlayerManager.setOrigin(player.getUniqueId(), originType.getOrigin(player));
-                        }
 
-                         */
+                        if(!(PlayerManager.getOrigin(player.getUniqueId()) == null || PlayerManager.getOrigin(player.getUniqueId()).getOriginType() == OriginType.UNASSIGNED)){
+                            MessageUtil.sendMessage("&cYou cannot select an origin if you already have an origin.", player);
+                            return false;
+                        }
                         PlayerManager.setOrigin(player.getUniqueId(), originType.getOrigin(player));
                         CommandPanelsAPI api = CommandPanels.getAPI();
                         if (api.hasNormalInventory(player)) {
                             player.getOpenInventory().close();
                         }
-                        //MessageUtil.sendMessage("&cYou cannot select an origin if you already have an origin.", player);
+
                         return true;
                     } catch (Exception e) {
                         openMenu((Player) commandSender);
@@ -67,10 +66,6 @@ public class OriginCommandListener implements TabExecutor {
                     }
                 }
                 return true;
-        }
-        if (commandSender instanceof Player) {
-            openMenu(((Player) commandSender).getPlayer());
-            return true;
         }
         return false;
     }

@@ -12,7 +12,7 @@ public class Enderian extends Origin {
     public Enderian(Player player) {
         super(OriginType.ENDERIAN, player);
         cooldown = 0;
-        teleportOnDamage = true;
+        teleportOnDamage = false;
         teleportInvulnerability = false;
     }
 

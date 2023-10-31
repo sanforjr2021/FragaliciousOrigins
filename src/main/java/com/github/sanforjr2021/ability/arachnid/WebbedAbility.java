@@ -16,7 +16,7 @@ public class WebbedAbility extends Ability {
     private static int DURATION, AMPLIFIER;
 
     public WebbedAbility(EntityDamageByEntityEvent e) {
-        if(e.getEntity() instanceof LivingEntity){
+        if(e.getEntity() instanceof LivingEntity && e.getFinalDamage() > 0.01){
             LivingEntity target = (LivingEntity) e.getEntity();
             if(WEB_CHANCE > Math.random()){
                 PlayerUtils.addEffect(target, PotionEffectType.POISON,AMPLIFIER, DURATION);

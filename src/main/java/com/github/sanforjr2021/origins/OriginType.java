@@ -1,5 +1,8 @@
 package com.github.sanforjr2021.origins;
 
+import com.github.sanforjr2021.util.MessageUtil;
+import com.github.sanforjr2021.util.PlayerUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public enum OriginType {
@@ -39,7 +42,11 @@ public enum OriginType {
             case ARACHNID:
                 return new Arachnid(player);
             case ELYTRIAN:
-                return new Elytrian(player);
+                if(!PlayerUtils.isBedrock(player)){
+                    return new Elytrian(player);
+                }else{
+                    MessageUtil.sendMessage("&cBedrock cannot play as Elytrian", player);
+                }
             default:
                 return new Unassigned(player);
         }

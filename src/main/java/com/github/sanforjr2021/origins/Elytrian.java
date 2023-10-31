@@ -10,10 +10,12 @@ public class Elytrian extends Origin{
     private boolean wingsActive;
     private static float SPEED_MODIFIER;
     private static float ATTACK_SPEED_MODIFIER;
+    private float armor;
     public Elytrian( Player player) {
         super(OriginType.ELYTRIAN, player);
         wingsActive = true;
         cooldown = 0;
+        armor = (float) getPlayer().getAttribute(Attribute.GENERIC_ARMOR).getValue();
         updateArmorSpeedPenalty();
         PlayerUtils.setAttackSpeed(player, 4.0f * ATTACK_SPEED_MODIFIER);
     }
@@ -25,10 +27,14 @@ public class Elytrian extends Origin{
 
     @Override
     public void onDeath() {
+
         updateArmorSpeedPenalty();
     }
     public void updateArmorSpeedPenalty(){
-        float armor = (float) getPlayer().getAttribute(Attribute.GENERIC_ARMOR).getValue();
+        if(armor == (float) getPlayer().getAttribute(Attribute.GENERIC_ARMOR).getValue()){
+            return; //do nothing
+        }
+        armor = (float) getPlayer().getAttribute(Attribute.GENERIC_ARMOR).getValue();
         if(armor == 0){
             PlayerUtils.resetWalkSpeed(getPlayer());
         }else{
@@ -60,4 +66,11 @@ public class Elytrian extends Origin{
         ATTACK_SPEED_MODIFIER = (float) ConfigHandler.getElytrianAttackSpeedModifer();
     }
 
+    public float getArmor() {
+        return armor;
+    }
+
+    public void setArmor(float armor) {
+        this.armor = armor;
+    }
 }
