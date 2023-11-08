@@ -14,6 +14,9 @@ public class TridentAmplifierAbility extends Ability {
 
     public TridentAmplifierAbility(EntityDamageByEntityEvent e) {
         Merling merling = (Merling) PlayerManager.getOrigin(e.getDamager().getUniqueId());
+        if(e.isCancelled()){
+            return;
+        }
         if(merling.isWieldingTrident()){
             if(e.getEntity() instanceof LivingEntity){
                 LivingEntity target = (LivingEntity) e.getEntity();

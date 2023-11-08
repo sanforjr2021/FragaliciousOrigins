@@ -16,6 +16,9 @@ public class WebbedAbility extends Ability {
     private static int DURATION, AMPLIFIER;
 
     public WebbedAbility(EntityDamageByEntityEvent e) {
+        if(e.isCancelled()){
+            return;
+        }
         if(e.getEntity() instanceof LivingEntity && e.getFinalDamage() > 0.01){
             LivingEntity target = (LivingEntity) e.getEntity();
             if(WEB_CHANCE > Math.random()){

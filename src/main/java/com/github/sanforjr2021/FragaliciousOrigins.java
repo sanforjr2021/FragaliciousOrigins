@@ -14,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import static com.github.sanforjr2021.util.MessageUtil.log;
 
 public class FragaliciousOrigins extends JavaPlugin {
-    private static FragaliciousOrigins instance;
+    public static FragaliciousOrigins instance;
     private static AbilityListener abilityListener;
     private static DAOController daoController;
     private static PlayerManager playerManager;

@@ -13,6 +13,9 @@ public class LevitateEnemyAbility extends Ability {
     private static double TARGET_LEVITATE_CHANCE;
 
     public LevitateEnemyAbility(EntityDamageByEntityEvent e) {
+        if(e.isCancelled()){
+            return;
+        }
         Shulk shulk = (Shulk) PlayerManager.getOrigin(e.getDamager().getUniqueId());
         double chance = Math.random();
         if (shulk.isLevitationActive() && TARGET_LEVITATE_CHANCE > chance) {

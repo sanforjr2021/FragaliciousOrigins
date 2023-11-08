@@ -51,13 +51,6 @@ public class GhostAbility extends Ability {
                                 OriginBossBarManager.geOriginBossBar(uuid, BossBarType.GHOST_MODE).setProgress(phantom.getGhostTimeRemaining(),GHOST_TIME);
                                 int ghostTimeRemaining = phantom.getGhostTimeRemaining();
                                 phantom.setGhostTimeRemaining(ghostTimeRemaining - 5);
-                                //check needs darkness
-                                boolean isSolid = player.getLocation().getBlock().isSolid();
-                                if (isSolid && !player.hasPotionEffect(PotionEffectType.DARKNESS)) {
-                                    PlayerUtils.addEffect(player, PotionEffectType.DARKNESS, 0);
-                                } else if (!isSolid && player.hasPotionEffect(PotionEffectType.DARKNESS)) { //remove player blindness when above ground
-                                    PlayerUtils.removeEffect(player, PotionEffectType.DARKNESS);
-                                }
                                 if(phantom.getGhostTimeRemaining() == 0){
                                     exitSpectator(phantom);
                                 }
@@ -86,12 +79,11 @@ public class GhostAbility extends Ability {
             }
         }
     }
-    private void exitSpectator(Phantom phantom){
+    public static void exitSpectator(Phantom phantom){
         Player player = phantom.getPlayer();
         PlayerUtils.resetFlySpeed(player);
         player.setGameMode(GameMode.SURVIVAL);
         phantom.setGhostTimeRemaining(0);
-        PlayerUtils.removeEffect(player, PotionEffectType.DARKNESS);
         OriginBossBarManager.removeBossBar(player.getUniqueId(), BossBarType.GHOST_MODE);
         player.setFallDistance(0);
         PlayerUtils.addEffect(player, PotionEffectType.SLOW_FALLING,0,40);

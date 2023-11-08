@@ -9,6 +9,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 public class HeatLossOnDamageAbility extends Ability {
     private static int ON_FIRE_GAIN;
     public HeatLossOnDamageAbility(EntityDamageEvent e) {
+        if(e.isCancelled()){
+            return;
+        }
         Blazeborn blazeborn = (Blazeborn) PlayerManager.getOrigin(e.getEntity().getUniqueId());
         if(e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
                 || e.getCause() == EntityDamageEvent.DamageCause.LAVA || e.getCause() == EntityDamageEvent.DamageCause.MELTING

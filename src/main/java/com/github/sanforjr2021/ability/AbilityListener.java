@@ -29,6 +29,8 @@ import me.rockyhawk.commandpanels.api.CommandPanelsAPI;
 import me.rockyhawk.commandpanels.api.Panel;
 import me.rockyhawk.commandpanels.openpanelsmanager.PanelPosition;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
@@ -239,7 +241,6 @@ public class AbilityListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onTeleport(PlayerTeleportEvent e) {
-        //cancel phantom spectator events
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
         switch (origin.getOriginType()) {
             case PHANTOM:
@@ -255,6 +256,10 @@ public class AbilityListener implements Listener {
     @EventHandler
     public void onGlideToggle(EntityToggleGlideEvent e) {
         if (e.getEntity() instanceof Player) {
+            Player player = (Player) e.getEntity();
+            if(!(player.getPlayer().getGameMode() == GameMode.SURVIVAL)){
+                return;
+            }
             Origin origin = PlayerManager.getOrigin(e.getEntity().getUniqueId());
             if (origin.getOriginType() == OriginType.ELYTRIAN) {
                 new SpreadWingsAbility(e);
@@ -265,6 +270,13 @@ public class AbilityListener implements Listener {
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player) {
+            Player player = (Player) e.getEntity();
+            if(!(player.getPlayer().getGameMode() == GameMode.SURVIVAL)){
+                return;
+            }
+            if(e.isCancelled()){
+                return;
+            }
             Origin origin = PlayerManager.getOrigin(e.getEntity().getUniqueId());
             switch (origin.getOriginType()) {
                 case FELINE:
@@ -294,8 +306,14 @@ public class AbilityListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onAttackEntity(EntityDamageByEntityEvent e) {
+        if(e.isCancelled()){
+            return;
+        }
         if (e.getDamager() instanceof Player) {
             Player player = (Player) e.getDamager();
+            if(!(player.getPlayer().getGameMode() == GameMode.SURVIVAL)){
+                return;
+            }
             Origin origin = PlayerManager.getOrigin(player.getUniqueId());
             switch (origin.getOriginType()) {
                 case SHULK:
@@ -346,12 +364,21 @@ public class AbilityListener implements Listener {
 
     @EventHandler
     public void onPlayBreakBlock(BlockBreakEvent e) {
+        if(!(e.getPlayer().getGameMode() == GameMode.SURVIVAL)){
+            return;
+        }
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
         if (origin.getOriginType() == OriginType.FELINE) {
             new WeakMinerAbility(e);
         }
     }
-
+    @EventHandler
+    public void onPlayerSprint(PlayerToggleSprintEvent e){
+        Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
+        if (origin.getOriginType() == OriginType.PHANTOM && origin.getPlayer().getGameMode() == GameMode.SPECTATOR) {
+            GhostAbility.exitSpectator((Phantom) origin);
+        }
+    }
     ///////////////////////////////////////////////////////////////
     //                    Utility Methods                       //
     //////////////////////////////////////////////////////////////

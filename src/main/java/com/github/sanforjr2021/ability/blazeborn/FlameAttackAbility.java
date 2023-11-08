@@ -15,7 +15,9 @@ public class FlameAttackAbility extends Ability {
     public FlameAttackAbility(EntityDamageByEntityEvent e) {
         Blazeborn blazeborn = (Blazeborn) PlayerManager.getOrigin(e.getDamager().getUniqueId());
         Blazeborn.HeatLevel level = blazeborn.getLevel();
-
+        if(e.isCancelled()){
+            return;
+        }
         if(e.getEntity() instanceof LivingEntity && e.getFinalDamage() > 0.01){
             LivingEntity entity = (LivingEntity) e.getEntity();
             //scorch target
