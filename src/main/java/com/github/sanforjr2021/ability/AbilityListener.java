@@ -252,7 +252,17 @@ public class AbilityListener implements Listener {
                 new TeleportDamageImmunity(e);
         }
     }
-
+    @EventHandler
+    public void onWorldChange(PlayerChangedWorldEvent e){
+        Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
+        switch (origin.getOriginType()) {
+            case ENDERIAN:
+                Enderian enderian = (Enderian) origin;
+                if(enderian.isTeleportOnDamage() == true && e.getPlayer().getWorld().getEnvironment() == World.Environment.NETHER){
+                    secondaryAbility(enderian);
+                }
+        }
+    }
     @EventHandler
     public void onGlideToggle(EntityToggleGlideEvent e) {
         if (e.getEntity() instanceof Player) {
@@ -267,7 +277,7 @@ public class AbilityListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player) {
             Player player = (Player) e.getEntity();
@@ -375,8 +385,8 @@ public class AbilityListener implements Listener {
     @EventHandler
     public void onPlayerSprint(PlayerToggleSprintEvent e){
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-        if (origin.getOriginType() == OriginType.PHANTOM && origin.getPlayer().getGameMode() == GameMode.SPECTATOR) {
-            GhostAbility.exitSpectator((Phantom) origin);
+        if (origin.getOriginType() == OriginType.PHANTOM && origin.getPlayer().getGameMode() == GameMode.SPECTATOR && e.isSprinting()) {
+            GhostAbility.sprintExitSpectator((Phantom) origin);
         }
     }
     ///////////////////////////////////////////////////////////////

@@ -13,7 +13,7 @@ public class ToggleTeleportOnDamageAbility extends Ability {
         if(teleportOnDamage){
             MessageUtil.sendMessage("You will now teleport when taking damage", origin.getPlayer());
             if(origin.getPlayer().getWorld().getEnvironment() == World.Environment.NETHER){
-                MessageUtil.sendMessage("&cWarning - When enabled in the nether, you will teleport to the nether roof and die on hit.", origin.getPlayer());
+                MessageUtil.sendMessage("&4WARNING: &cYou are playing as extreme Enderian mode. You will die and likely lose your items when taking damage. Use at your own risk", origin.getPlayer());
             }
         }else{
             MessageUtil.sendMessage("You will no longer teleport when taking damage", origin.getPlayer());

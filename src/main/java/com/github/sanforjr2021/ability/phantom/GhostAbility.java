@@ -9,6 +9,7 @@ import com.github.sanforjr2021.util.MessageUtil;
 import com.github.sanforjr2021.util.PlayerUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
@@ -79,7 +80,7 @@ public class GhostAbility extends Ability {
             }
         }
     }
-    public static void exitSpectator(Phantom phantom){
+    private static void exitSpectator(Phantom phantom){
         Player player = phantom.getPlayer();
         PlayerUtils.resetFlySpeed(player);
         player.setGameMode(GameMode.SURVIVAL);
@@ -88,7 +89,13 @@ public class GhostAbility extends Ability {
         player.setFallDistance(0);
         PlayerUtils.addEffect(player, PotionEffectType.SLOW_FALLING,0,40);
     }
-
+    public static void sprintExitSpectator(Phantom phantom){
+        Location legLocation = phantom.getPlayer().getLocation();
+        Location headLocation = new Location(legLocation.getWorld(), legLocation.getX(),legLocation.getY() + 1, legLocation.getZ());
+        if(legLocation.getBlock().isSolid() == false ||headLocation.getBlock().isSolid() == false ){
+            exitSpectator(phantom);
+        }
+    }
     public static void reload() {
         GHOST_COOLDOWN = getPhantomGhostmodeCooldown() * 20;
         GHOST_TIME = getPhantomGhostModeDuration() * 20;
