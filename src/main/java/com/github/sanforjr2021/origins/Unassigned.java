@@ -29,4 +29,49 @@ public class Unassigned extends Origin{
         panel.open(getPlayer(), PanelPosition.Top);
         MessageUtil.sendMessage("If you accidentally close the menu, you can type &c/origin choose&f to bring back up the menu", getPlayer());
     }
+
+    @Override
+    public void setPrimaryCooldown(int primaryCooldown) {
+
+    }
+
+    @Override
+    public int getPrimaryMaxCooldown() {
+        return 0;
+    }
+
+    @Override
+    public void primaryAbilityActivate() {
+
+    }
+
+    @Override
+    public void primaryAbilityTick() {
+
+    }
+
+    @Override
+    public void setSecondaryCooldown(int secondaryCooldown) {
+
+    }
+
+    @Override
+    public int getSecondaryMaxCooldown() {
+        return 0;
+    }
+
+    @Override
+    public void secondaryAbilityActivate() {
+
+    }
+
+    @Override
+    public void secondaryAbilityTick() {
+
+    }
+
+    @Override
+    public void passiveAbilitiesTick() {
+
+    }
 }

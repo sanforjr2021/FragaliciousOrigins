@@ -12,8 +12,8 @@ import com.github.sanforjr2021.ability.chicken.SlowfallAbility;
 import com.github.sanforjr2021.ability.chicken.SpawnBirdAbility;
 import com.github.sanforjr2021.ability.elytrian.*;
 import com.github.sanforjr2021.ability.enderian.*;
-import com.github.sanforjr2021.ability.feline.*;
-import com.github.sanforjr2021.ability.merling.*;
+import com.github.sanforjr2021.ability.individual.FelineAbilities;
+import com.github.sanforjr2021.ability.individual.MerlingAbilities;
 import com.github.sanforjr2021.ability.phantom.GhostAbility;
 import com.github.sanforjr2021.ability.phantom.ShadowSkinAbility;
 import com.github.sanforjr2021.ability.shared.*;
@@ -29,7 +29,6 @@ import me.rockyhawk.commandpanels.api.CommandPanelsAPI;
 import me.rockyhawk.commandpanels.api.Panel;
 import me.rockyhawk.commandpanels.openpanelsmanager.PanelPosition;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
@@ -49,9 +48,88 @@ import static com.github.sanforjr2021.FragaliciousOrigins.getInstance;
 
 public class AbilityListener implements Listener {
     private final CommandPanelsAPI api = CommandPanels.getAPI();
+
     public AbilityListener() {
         reload();
         playerChecker();
+    }
+
+    ///////////////////////////////////////////////////////////////
+    //                    Utility Methods                       //
+    //////////////////////////////////////////////////////////////
+    public static void primaryAbility(Origin origin) {
+        switch (origin.getOriginType()) {
+            case PHANTOM:
+                new GhostAbility((Phantom) origin);
+                break;
+            case FELINE:
+            case MERLING:
+                origin.primaryAbilityActivate();
+                break;
+            case ENDERIAN:
+                new TeleportAbility((Enderian) origin);
+                break;
+            case SHULK:
+                new ShulkInventoryAbility((Shulk) origin);
+                break;
+            case CHICKEN:
+                new SpawnBirdAbility((Chicken) origin);
+                break;
+            case BLAZEBORN:
+                new BurnItemAbility((Blazeborn) origin);
+                break;
+            case ARACHNID:
+                new SpiderSensesAbility((Arachnid) origin);
+                break;
+            case ELYTRIAN:
+                new BoostAbility((Elytrian) origin);
+                break;
+        }
+    }
+
+    public static void secondaryAbility(Origin origin) {
+        switch (origin.getOriginType()) {
+            case MERLING:
+                origin.secondaryAbilityActivate();
+            case ENDERIAN:
+                new ToggleTeleportOnDamageAbility((Enderian) origin);
+                break;
+            case SHULK:
+                new ToggleLevitationAbility((Shulk) origin);
+                break;
+            case BLAZEBORN:
+                new PurgeAbility((Blazeborn) origin);
+                break;
+            case ARACHNID:
+                new ToggleClimbAbility((Arachnid) origin);
+                break;
+            case ELYTRIAN:
+                new ToggleWingsAbility((Elytrian) origin);
+                break;
+        }
+    }
+
+    public static void reload() {
+        GhostAbility.reload();
+        ShadowSkinAbility.reload();
+        NocturnalSleepAbility.reload();
+        TeleportAbility.reload();
+        TeleportOnDamageAbility.reload();
+        LevitateEnemyAbility.reload();
+        LevitateOnDamageAbility.reload();
+        ReducedHungerAbility.reload();
+        SpawnBirdAbility.reload();
+        HeatLossOnDamageAbility.reload();
+        HeatAbility.reload();
+        WebbedAbility.reload();
+        ClimbAbility.reload();
+        SpiderSensesAbility.reload();
+        BoostAbility.reload();
+        ElytrianMovementAbility.reload();
+        ImpactAbility.reload();
+
+        FelineAbilities.reload();
+        MerlingAbilities.reload();
     }
 
     private void playerChecker() {
@@ -74,13 +152,9 @@ public class AbilityListener implements Listener {
                             break;
                     }
                     if (counter == 4) {
-                        switch (playerOrigin.getValue().getOriginType()) {
-                            case BLAZEBORN:
-                                new HeatAbility((Blazeborn) playerOrigin.getValue());
-                                break;
-                            case MERLING:
-                                new MerlingPassiveAbility((Merling) playerOrigin.getValue());
-                                break;
+                        playerOrigin.getValue().passiveAbilitiesTick();
+                        if (playerOrigin.getValue().getOriginType() == OriginType.BLAZEBORN) {
+                            new HeatAbility((Blazeborn) playerOrigin.getValue());
                         }
                     }
                 }
@@ -107,7 +181,6 @@ public class AbilityListener implements Listener {
             Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
             switch (origin.getOriginType()) {
                 case FELINE:
-                    new WaterWeaknessAbility(e);
                     new NightVisionAbility(e);
                     break;
                 case ARACHNID:
@@ -121,7 +194,7 @@ public class AbilityListener implements Listener {
                     new SlowfallAbility(e);
                     break;
                 case MERLING:
-                    new SpeedSwimAbility(e);
+                    MerlingAbilities.speedSwimAbility(e);
                     break;
                 case ELYTRIAN:
                     new ElytrianMovementAbility(e);
@@ -184,13 +257,13 @@ public class AbilityListener implements Listener {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
         switch (origin.getOriginType()) {
             case FELINE:
-                new NineLivesAbility(e);
+                FelineAbilities.nineLivesAbility(e);
                 break;
             case BLAZEBORN:
                 new ExtinguishAbility(e, (Blazeborn) origin);
                 break;
             case MERLING:
-                new TridentTotemAbility(e, (Merling) origin);
+                MerlingAbilities.tridentTotemAbility(e, (Merling) origin);
         }
     }
 
@@ -205,7 +278,6 @@ public class AbilityListener implements Listener {
         }
         e.setCancelled(true);
     }
-
 
     @EventHandler
     public void onLogin(PlayerJoinEvent e) {
@@ -252,22 +324,23 @@ public class AbilityListener implements Listener {
                 new TeleportDamageImmunity(e);
         }
     }
+
     @EventHandler
-    public void onWorldChange(PlayerChangedWorldEvent e){
+    public void onWorldChange(PlayerChangedWorldEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
-        switch (origin.getOriginType()) {
-            case ENDERIAN:
-                Enderian enderian = (Enderian) origin;
-                if(enderian.isTeleportOnDamage() == true && e.getPlayer().getWorld().getEnvironment() == World.Environment.NETHER){
-                    secondaryAbility(enderian);
-                }
+        if (origin.getOriginType() == OriginType.ENDERIAN) {
+            Enderian enderian = (Enderian) origin;
+            if (enderian.isTeleportOnDamage() && e.getPlayer().getWorld().getEnvironment() == World.Environment.NETHER) {
+                secondaryAbility(enderian);
+            }
         }
     }
+
     @EventHandler
     public void onGlideToggle(EntityToggleGlideEvent e) {
         if (e.getEntity() instanceof Player) {
             Player player = (Player) e.getEntity();
-            if(!(player.getPlayer().getGameMode() == GameMode.SURVIVAL)){
+            if (!(player.getPlayer().getGameMode() == GameMode.SURVIVAL)) {
                 return;
             }
             Origin origin = PlayerManager.getOrigin(e.getEntity().getUniqueId());
@@ -277,20 +350,20 @@ public class AbilityListener implements Listener {
         }
     }
 
-    @EventHandler (priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player) {
             Player player = (Player) e.getEntity();
-            if(!(player.getPlayer().getGameMode() == GameMode.SURVIVAL)){
+            if (!(player.getPlayer().getGameMode() == GameMode.SURVIVAL)) {
                 return;
             }
-            if(e.isCancelled()){
+            if (e.isCancelled()) {
                 return;
             }
             Origin origin = PlayerManager.getOrigin(e.getEntity().getUniqueId());
             switch (origin.getOriginType()) {
                 case FELINE:
-                    new NoFallDamageAbility(e);
+                    FelineAbilities.noFallDamageAbility(e);
                     break;
                 case ENDERIAN:
                     new TeleportOnDamageAbility(e);
@@ -316,12 +389,12 @@ public class AbilityListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onAttackEntity(EntityDamageByEntityEvent e) {
-        if(e.isCancelled()){
+        if (e.isCancelled()) {
             return;
         }
         if (e.getDamager() instanceof Player) {
             Player player = (Player) e.getDamager();
-            if(!(player.getPlayer().getGameMode() == GameMode.SURVIVAL)){
+            if (!(player.getPlayer().getGameMode() == GameMode.SURVIVAL)) {
                 return;
             }
             Origin origin = PlayerManager.getOrigin(player.getUniqueId());
@@ -333,14 +406,14 @@ public class AbilityListener implements Listener {
                     new FlameAttackAbility(e);
                     break;
                 case MERLING:
-                    new TridentAmplifierAbility(e);
+                    MerlingAbilities.tridentAmplifierAbility(e);
                     break;
                 case ARACHNID:
                     new WebbedAbility(e);
                     break;
             }
         } else if (e.getDamager() instanceof Trident) {
-            new ThrownTridentAmplifierAbility(e);
+            MerlingAbilities.thrownTridentAmplifierAbility(e);
         }
     }
 
@@ -359,7 +432,7 @@ public class AbilityListener implements Listener {
                 new CannotEatFoodAbility(e);
                 break;
             case MERLING:
-                new MerlingWaterDrink(e);
+                MerlingAbilities.waterDrink(e);
                 break;
         }
     }
@@ -368,108 +441,27 @@ public class AbilityListener implements Listener {
     public void onPlayerJump(PlayerJumpEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
         if (origin.getOriginType() == OriginType.FELINE) {
-            new LeapAbility(e);
+            FelineAbilities.leapAbility(e);
         }
     }
 
     @EventHandler
     public void onPlayBreakBlock(BlockBreakEvent e) {
-        if(!(e.getPlayer().getGameMode() == GameMode.SURVIVAL)){
+        if (!(e.getPlayer().getGameMode() == GameMode.SURVIVAL)) {
             return;
         }
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
         if (origin.getOriginType() == OriginType.FELINE) {
-            new WeakMinerAbility(e);
+            FelineAbilities.weakMinerAbility(e);
         }
     }
+
     @EventHandler
-    public void onPlayerSprint(PlayerToggleSprintEvent e){
+    public void onPlayerSprint(PlayerToggleSprintEvent e) {
         Origin origin = PlayerManager.getOrigin(e.getPlayer().getUniqueId());
         if (origin.getOriginType() == OriginType.PHANTOM && origin.getPlayer().getGameMode() == GameMode.SPECTATOR && e.isSprinting()) {
             GhostAbility.sprintExitSpectator((Phantom) origin);
         }
-    }
-    ///////////////////////////////////////////////////////////////
-    //                    Utility Methods                       //
-    //////////////////////////////////////////////////////////////
-    public static void primaryAbility(Origin origin) {
-        switch (origin.getOriginType()) {
-            case PHANTOM:
-                new GhostAbility((Phantom) origin);
-                break;
-            case FELINE:
-                new PounceAbility(origin.getPlayer());
-                break;
-            case ENDERIAN:
-                new TeleportAbility((Enderian) origin);
-                break;
-            case SHULK:
-                new ShulkInventoryAbility((Shulk) origin);
-                break;
-            case CHICKEN:
-                new SpawnBirdAbility((Chicken) origin);
-                break;
-            case BLAZEBORN:
-                new BurnItemAbility((Blazeborn) origin);
-                break;
-            case MERLING:
-                new ToggleSpeedSwimAbility((Merling) origin);
-                break;
-            case ARACHNID:
-                new SpiderSensesAbility((Arachnid) origin);
-                break;
-            case ELYTRIAN:
-                new BoostAbility((Elytrian) origin);
-                break;
-        }
-    }
-
-    public static void secondaryAbility(Origin origin) {
-        switch (origin.getOriginType()) {
-            case ENDERIAN:
-                new ToggleTeleportOnDamageAbility((Enderian) origin);
-                break;
-            case SHULK:
-                new ToggleLevitationAbility((Shulk) origin);
-                break;
-            case BLAZEBORN:
-                new PurgeAbility((Blazeborn) origin);
-                break;
-            case ARACHNID:
-                new ToggleClimbAbility((Arachnid) origin);
-                break;
-            case ELYTRIAN:
-                new ToggleWingsAbility((Elytrian) origin);
-                break;
-        }
-    }
-
-    public static void reload() {
-        GhostAbility.reload();
-        ShadowSkinAbility.reload();
-        NocturnalSleepAbility.reload();
-        LeapAbility.reload();
-        PounceAbility.reload();
-        TeleportAbility.reload();
-        TeleportOnDamageAbility.reload();
-        LevitateEnemyAbility.reload();
-        LevitateOnDamageAbility.reload();
-        ReducedHungerAbility.reload();
-        SpawnBirdAbility.reload();
-        HeatLossOnDamageAbility.reload();
-        HeatAbility.reload();
-        TridentTotemAbility.reload();
-        SpeedSwimAbility.reload();
-        MerlingPassiveAbility.reload();
-        MerlingWaterDrink.reload();
-        TridentAmplifierAbility.reload();
-        ThrownTridentAmplifierAbility.reload();
-        WebbedAbility.reload();
-        ClimbAbility.reload();
-        SpiderSensesAbility.reload();
-        BoostAbility.reload();
-        ElytrianMovementAbility.reload();
-        ImpactAbility.reload();
     }
 
 

@@ -14,6 +14,8 @@ public abstract class Origin {
     private UUID uuid;
     private boolean isSleeping = false;
     private boolean isTemp = false;
+    protected int primaryCooldown;
+    protected int secondaryCooldown;
     public Origin(OriginType origin, Player player){
         originType = origin;
         uuid = player.getUniqueId();
@@ -21,6 +23,8 @@ public abstract class Origin {
         if(origin != OriginType.UNASSIGNED){
             MessageUtil.sendMessage("&eYou are playing as a &c" + origin, player);
         }
+        primaryCooldown = 0;
+        secondaryCooldown = 0;
         onLogin();
     }
     public abstract void onLogin();
@@ -74,5 +78,31 @@ public abstract class Origin {
     }
     public void setTemp(boolean temp) {
         isTemp = temp;
+    }
+    public int getPrimaryCooldown() {
+        return primaryCooldown;
+    }
+
+    public abstract void setPrimaryCooldown(int primaryCooldown);
+
+    public abstract int getPrimaryMaxCooldown();
+    public abstract void primaryAbilityActivate();
+    public abstract void primaryAbilityTick();
+
+    public int getSecondaryCooldown() {
+        return secondaryCooldown;
+    }
+    public abstract void setSecondaryCooldown(int secondaryCooldown);
+    public abstract int getSecondaryMaxCooldown();
+    public abstract void secondaryAbilityActivate();
+    public abstract void secondaryAbilityTick();
+
+    public abstract void passiveAbilitiesTick();
+
+    protected void primaryAbilityCooldownMessage(String abilityName){
+        MessageUtil.sendMessage("&e" + abilityName + " is on cooldown for &c" + primaryCooldown + " &eseconds.", getPlayer());
+    }
+    protected void secondaryAbilityCooldownMessage(String abilityName){
+        MessageUtil.sendMessage("&e" + abilityName + " is on cooldown for &c" + secondaryCooldown + " &eseconds.", getPlayer());
     }
 }
