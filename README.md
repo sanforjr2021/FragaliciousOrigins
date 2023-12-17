@@ -4,6 +4,6 @@ Fragalicious Origins
 A different take on the famous Origins Mod. Additional Information to come. 
 If you would like to see this plugin in action, you can play on the unofficial server.
 
-Original Mod: [https://www.curseforge.com/minecraft/mc-mods/origins](Curseforge)  
-Unofficial Server(Java): play.originsmc.net
-Unofficial Server(Geyser Bedrock): play.originsmc.net Port: 19132
+Want to play the current version of this? Come join our server:
+Java: **IP:**play.originsreborn.org
+Bedrock **IP**: play.originsreborn.org  **Port**: 19132 
